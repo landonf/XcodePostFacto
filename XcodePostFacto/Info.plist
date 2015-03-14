@@ -25,7 +25,7 @@
 	<key>NSPrincipalClass</key>
 	<string>XcodePostFactoPlugin</string>
 	<key>DTXcode</key>
-	<string>0500</string>
+	<string>0630</string>
 	<key>DVTPlugInCompatibilityUUIDs</key>
 	<array>
 		<string>992275C1-432A-4CF7-B659-D84ED6D42D3F</string>
