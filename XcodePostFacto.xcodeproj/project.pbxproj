@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */; };
+		05B0264D1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */; };
 		05B026501AB4E1D000F6BF2B /* XcodePostFactoPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcodePostFacto.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B026461AB4E14C00F6BF2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = XcodePostFacto.xcplugindata; path = "../../../Plausible/excode-plugin/eXcode/XcodePostFacto.xcplugindata"; sourceTree = "<group>"; };
+		05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XcodePostFactoPlugin.xcplugindata; sourceTree = "<group>"; };
 		05B0264E1AB4E1D000F6BF2B /* XcodePostFactoPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodePostFactoPlugin.h; sourceTree = "<group>"; };
 		05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFactoPlugin.m; sourceTree = "<group>"; };
 		05B026511AB4E30B00F6BF2B /* XPFLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPFLog.h; sourceTree = "<group>"; };
@@ -61,7 +61,7 @@
 		05B026451AB4E14C00F6BF2B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */,
+				05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */,
 				05B026461AB4E14C00F6BF2B /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -123,7 +123,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */,
+				05B0264D1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +258,7 @@
 				05B0264B1AB4E14C00F6BF2B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
