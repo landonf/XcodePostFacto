@@ -9,7 +9,23 @@
 /* Begin PBXBuildFile section */
 		05B0264D1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */; };
 		05B026501AB4E1D000F6BF2B /* XcodePostFactoPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */; };
+		05B026B71AB4EA9B00F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
+		05B026B91AB4EAB000F6BF2B /* PLPatchMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		05B026B81AB4EAA600F6BF2B /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				05B026B91AB4EAB000F6BF2B /* PLPatchMaster.framework in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcodePostFacto.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -18,6 +34,9 @@
 		05B0264E1AB4E1D000F6BF2B /* XcodePostFactoPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodePostFactoPlugin.h; sourceTree = "<group>"; };
 		05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFactoPlugin.m; sourceTree = "<group>"; };
 		05B026511AB4E30B00F6BF2B /* XPFLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPFLog.h; sourceTree = "<group>"; };
+		05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLPatchMaster.framework; sourceTree = "<group>"; };
+		05B026A61AB4EA7B00F6BF2B /* PLPatchMaster.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = PLPatchMaster.framework.dSYM; sourceTree = "<group>"; };
+		05B026A71AB4EA7B00F6BF2B /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05B026B71AB4EA9B00F6BF2B /* PLPatchMaster.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -35,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				05B026441AB4E14C00F6BF2B /* XcodePostFacto */,
+				05B026521AB4EA7B00F6BF2B /* Dependencies */,
 				05B026431AB4E14C00F6BF2B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +88,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		05B026521AB4EA7B00F6BF2B /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */,
+				05B026A61AB4EA7B00F6BF2B /* PLPatchMaster.framework.dSYM */,
+				05B026A71AB4EA7B00F6BF2B /* README.txt */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -77,6 +108,7 @@
 				05B0263E1AB4E14C00F6BF2B /* Sources */,
 				05B0263F1AB4E14C00F6BF2B /* Frameworks */,
 				05B026401AB4E14C00F6BF2B /* Resources */,
+				05B026B81AB4EAA600F6BF2B /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -107,6 +139,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 05B026391AB4E14C00F6BF2B;
 			productRefGroup = 05B026431AB4E14C00F6BF2B /* Products */;
@@ -219,8 +252,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Dependencies",
+				);
 				INFOPLIST_FILE = XcodePostFacto/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				INSTALL_PATH = "$(HOME)/Library/Developer/Xcode/Plug-ins";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../SharedFrameworks @executable_path/../Frameworks @executable_path/../OtherFrameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = ideplugin;
@@ -231,8 +269,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Dependencies",
+				);
 				INFOPLIST_FILE = XcodePostFacto/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				INSTALL_PATH = "$(HOME)/Library/Developer/Xcode/Plug-ins";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../SharedFrameworks @executable_path/../Frameworks @executable_path/../OtherFrameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = ideplugin;
