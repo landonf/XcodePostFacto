@@ -27,16 +27,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "XCodePostFactoPlugin.h"
+#import "XcodePostFactoPlugin.h"
 #import "XPFLog.h"
 
 
-@implementation XCodePostFactoPlugin {
+@implementation XcodePostFactoPlugin {
 @private
 }
 
 // force loading of the plugin class upon bundle load
 + (void) load {
+    asm("int3");
     [self defaultPlugin];
 }
 
@@ -44,7 +45,7 @@
  * Return the default plugin instance.
  */
 + (instancetype) defaultPlugin {
-    static XCodePostFactoPlugin *defaultInstance;
+    static XcodePostFactoPlugin *defaultInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         defaultInstance = [[self alloc] init];
