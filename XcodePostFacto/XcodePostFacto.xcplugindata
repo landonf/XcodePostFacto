@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>version</key>
+	<dict>
+		<key>compiler-build</key>
+		<real>3524</real>
+		<key>file-format</key>
+		<integer>1</integer>
+	</dict>
+	<key>plug-in</key>
+	<dict>
+		<key>extensions</key>
+		<dict>
+			<key>XcodePostFacto.Xcode.Initializer</key>
+			<dict>
+				<key>id</key>
+				<string>Xcode.XcodePostFacto.Initializer</string>
+				<key>initializationClass</key>
+				<string>XcodePostFacto</string>
+				<key>name</key>
+				<string>XcodePostFacto Initializer</string>
+				<key>point</key>
+				<string>Xcode.IDEFoundation.IDEInitialization</string>
+				<key>version</key>
+				<string>0.1</string>
+			</dict>
+			<key>XcodePostFacto.CmdHandler.ViewAnalyzerMenuEntry</key>
+			<dict>
+				<key>handlerClass</key>
+				<string>XPFDebugMenu</string>
+				<key>id</key>
+				<string>XcodePostFacto.CmdHandler.ViewAnalyzerMenuEntry</string>
+				<key>cmdDefinition</key>
+				<string>XcodePostFacto.CmdDefinition.ViewAnalyzerMenuEntry</string>
+				<key>name</key>
+				<string>Show View Analyzer Command Handler</string>
+				<key>point</key>
+				<string>Xcode.IDEKit.CmdHandler</string>
+				<key>version</key>
+				<string>0.1</string>
+			</dict>
+			<key>XcodePostFacto.DebugMenuItemDefinition.ViewAnalyzerMenuEntry</key>
+			<dict>
+				<key>name</key>
+				<string>View Analyzer Menu Item</string>
+				<key>id</key>
+				<string>XcodePostFacto.DebugMenuItemDefinition.ViewAnalyzerMenuEntry</string>
+				<key>commandIdentifier</key>
+				<string>XcodePostFacto.CmdDefinition.ViewAnalyzerMenuEntry</string>
+				<key>type</key>
+				<string>command</string>
+				<key>point</key>
+				<string>Xcode.IDEKit.InternalMenuItemDefinition</string>
+				<key>version</key>
+				<string>0.1</string>
+			</dict>
+			<key>XcodePostFacto.CmdDefinition.ViewAnalyzerMenuEntry</key>
+			<dict>
+				<key>action</key>
+				<string>enableViewAnalyzer:</string>
+				<key>id</key>
+				<string>XcodePostFacto.CmdDefinition.ViewAnalyzerMenuEntry</string>
+				<key>point</key>
+				<string>Xcode.IDEKit.CmdDefinition</string>
+				<key>title</key>
+				<string>Show View Analyzer</string>
+				<key>menuItem</key>
+				<array/>
+				<key>version</key>
+				<string>0.1</string>
+				<key>name</key>
+				<string>Show View Analyzer</string>
+			</dict>
+		</dict>
+		<key>extension-points</key>
+		<dict/>
+	</dict>
+</dict>
+</plist>
