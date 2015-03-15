@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		05B0264D1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */; };
-		05B026501AB4E1D000F6BF2B /* XcodePostFactoPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */; };
-		05B026B71AB4EA9B00F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
-		05B026B91AB4EAB000F6BF2B /* PLPatchMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */; };
+		05B026501AB4E1D000F6BF2B /* XPFDebugMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B0264F1AB4E1D000F6BF2B /* XPFDebugMenu.m */; };
+		05B026BA1AB4F64F00F6BF2B /* PLPatchMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
+		05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,7 +21,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				05B026B91AB4EAB000F6BF2B /* PLPatchMaster.framework in Copy Files */,
+				05B026BA1AB4F64F00F6BF2B /* PLPatchMaster.framework in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -30,13 +31,15 @@
 /* Begin PBXFileReference section */
 		05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcodePostFacto.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B026461AB4E14C00F6BF2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XcodePostFactoPlugin.xcplugindata; sourceTree = "<group>"; };
-		05B0264E1AB4E1D000F6BF2B /* XcodePostFactoPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodePostFactoPlugin.h; sourceTree = "<group>"; };
-		05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFactoPlugin.m; sourceTree = "<group>"; };
+		05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XcodePostFacto.xcplugindata; sourceTree = "<group>"; };
+		05B0264E1AB4E1D000F6BF2B /* XPFDebugMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPFDebugMenu.h; sourceTree = "<group>"; };
+		05B0264F1AB4E1D000F6BF2B /* XPFDebugMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPFDebugMenu.m; sourceTree = "<group>"; };
 		05B026511AB4E30B00F6BF2B /* XPFLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPFLog.h; sourceTree = "<group>"; };
 		05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLPatchMaster.framework; sourceTree = "<group>"; };
 		05B026A61AB4EA7B00F6BF2B /* PLPatchMaster.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = PLPatchMaster.framework.dSYM; sourceTree = "<group>"; };
 		05B026A71AB4EA7B00F6BF2B /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05B026BC1AB4F68300F6BF2B /* XcodePostFacto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodePostFacto.h; sourceTree = "<group>"; };
+		05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFacto.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B026B71AB4EA9B00F6BF2B /* PLPatchMaster.framework in Frameworks */,
+				05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,8 +74,10 @@
 		05B026441AB4E14C00F6BF2B /* XcodePostFacto */ = {
 			isa = PBXGroup;
 			children = (
-				05B0264E1AB4E1D000F6BF2B /* XcodePostFactoPlugin.h */,
-				05B0264F1AB4E1D000F6BF2B /* XcodePostFactoPlugin.m */,
+				05B026BC1AB4F68300F6BF2B /* XcodePostFacto.h */,
+				05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */,
+				05B0264E1AB4E1D000F6BF2B /* XPFDebugMenu.h */,
+				05B0264F1AB4E1D000F6BF2B /* XPFDebugMenu.m */,
 				05B026511AB4E30B00F6BF2B /* XPFLog.h */,
 				05B026451AB4E14C00F6BF2B /* Supporting Files */,
 			);
@@ -82,7 +87,7 @@
 		05B026451AB4E14C00F6BF2B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				05B0264C1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata */,
+				05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */,
 				05B026461AB4E14C00F6BF2B /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -156,7 +161,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B0264D1AB4E17500F6BF2B /* XcodePostFactoPlugin.xcplugindata in Resources */,
+				05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,7 +172,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B026501AB4E1D000F6BF2B /* XcodePostFactoPlugin.m in Sources */,
+				05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */,
+				05B026501AB4E1D000F6BF2B /* XPFDebugMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

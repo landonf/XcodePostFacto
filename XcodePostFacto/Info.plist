@@ -23,12 +23,17 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2015 Landon Fuller. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
-	<string>XcodePostFactoPlugin</string>
+	<string>XcodePostFacto</string>
 	<key>DTXcode</key>
 	<string>0630</string>
 	<key>DVTPlugInCompatibilityUUIDs</key>
 	<array>
 		<string>992275C1-432A-4CF7-B659-D84ED6D42D3F</string>
+		<string>A16FF353-8441-459E-A50C-B071F53F51B7</string>
+	</array>
+	<key>DVTPlugInHostRequirements</key>
+	<array>
+		<string>foundation</string>
 	</array>
 </dict>
 </plist>

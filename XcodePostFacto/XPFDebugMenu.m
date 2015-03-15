@@ -27,31 +27,26 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "XcodePostFactoPlugin.h"
+#import "XPFDebugMenu.h"
 #import "XPFLog.h"
 
 
-@implementation XcodePostFactoPlugin {
+@implementation XPFDebugMenu {
 @private
 }
 
-// force loading of the plugin class upon bundle load
-+ (void) load {
-    asm("int3");
-    [self defaultPlugin];
-}
-
 /**
- * Return the default plugin instance.
+ * Return the shared handler instance; this global variable is necessitated by Xcode's
+ * use of a class method when resolving menu handlers.
  */
-+ (instancetype) defaultPlugin {
-    static XcodePostFactoPlugin *defaultInstance;
++ (instancetype) sharedHandler {
+    static XPFDebugMenu *sharedHandler;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        defaultInstance = [[self alloc] init];
+        sharedHandler = [[self alloc] init];
     });
     
-    return defaultInstance;
+    return sharedHandler;
 }
 
 /**
@@ -61,8 +56,6 @@
     if ((self = [super init]) == nil)
         return nil;
     
-    XPFLog(@"Plugin loaded; starting up ...");
-    
     return self;
 }
 
@@ -70,13 +63,37 @@
 // the entries 'action' value; we need to spend some time reverse engineering the menu configuration
 // options and how actions are mapped.
 + (id) handlerForAction: (SEL) action withSelectionSource: (id) src {
-    return [self defaultPlugin];
+    return [self sharedHandler];
 }
 
-// XCPF.CmdHandler.ViewAnalyzerMenuEntry handler.
+// XcodePostFacto.CmdHandler.ViewAnalyzerMenuEntry handler.
 - (void) enableViewAnalyzer: (id) sender {
-    // TODO
+    // TODO -- pending F-Script integration
+    
+#if 0
+    /* Fire up the analyzer window */
+    if (_analyzerWindowController == nil)
+        _analyzerWindowController = [[EXViewAnalyzerWindowController alloc] init];
+    [_analyzerWindowController showWindow: nil];
+    
+    /*
+     * F-Script compatibility patches
+     *
+     * Xcode's IDEInterfaceBuilderCocoaTouchIntegration includes an NSObject category that registers
+     * an assortment of ib-related methods for abstract methods, and then triggers non-exception-based
+     * abort() when they are called. This triggers a crash when F-Script introspects defined object
+     * properties. This ugly hack works around the issue; we can re-evaluate this in favor for a more
+     * surgical approach at later date.
+     *
+     * The IDEInterfaceBuilderCocoaTouchIntegration plugin may be loaded after our class, so we register
+     * a future patch.
+     */
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [NSObject ex_patchFutureSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) { return NSZeroPoint; }];
+        [NSObject ex_patchInstanceSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) { return NSZeroPoint; }];
+    });
+#endif
 }
-
 
 @end

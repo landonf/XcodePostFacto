@@ -29,6 +29,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface XcodePostFactoPlugin : NSObject
+@interface XPFDebugMenu : NSObject
 
 @end
