@@ -13,7 +13,29 @@
 		05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */; };
 		05EEA05B1AB53927000C8B89 /* XPFYosemiteFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */; };
+		05EEA0841AB7AA21000C8B89 /* xpf_bootstrap.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */; };
+		05EEA0861AB7AA21000C8B89 /* xpf_bootstrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.m */; };
+		05EEA08C1AB7AA22000C8B89 /* libxpf-bootstrap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05EEA0811AB7AA21000C8B89 /* libxpf-bootstrap.dylib */; };
+		05EEA09C1AB7AA82000C8B89 /* libxpf-bootstrap.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 05EEA0811AB7AA21000C8B89 /* libxpf-bootstrap.dylib */; };
+		05EEA09D1AB7AAD0000C8B89 /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		05EEA08D1AB7AA22000C8B89 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05B0263A1AB4E14C00F6BF2B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05EEA0801AB7AA21000C8B89;
+			remoteInfo = "xpf-bootstrap";
+		};
+		05EEA09A1AB7AA6B000C8B89 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05B0263A1AB4E14C00F6BF2B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05EEA0801AB7AA21000C8B89;
+			remoteInfo = "xpf-bootstrap";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		05B026B81AB4EAA600F6BF2B /* Copy Files */ = {
@@ -43,6 +65,11 @@
 		05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFacto.m; sourceTree = "<group>"; };
 		05EEA0591AB53927000C8B89 /* XPFYosemiteFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPFYosemiteFacade.h; sourceTree = "<group>"; };
 		05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPFYosemiteFacade.m; sourceTree = "<group>"; };
+		05EEA0811AB7AA21000C8B89 /* libxpf-bootstrap.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libxpf-bootstrap.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpf_bootstrap.h; sourceTree = "<group>"; };
+		05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xpf_bootstrap.m; sourceTree = "<group>"; };
+		05EEA08B1AB7AA22000C8B89 /* xpf-bootstrapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xpf-bootstrapTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05EEA0911AB7AA22000C8B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +81,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05EEA07E1AB7AA21000C8B89 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05EEA09D1AB7AAD0000C8B89 /* PLPatchMaster.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05EEA0881AB7AA22000C8B89 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05EEA08C1AB7AA22000C8B89 /* libxpf-bootstrap.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -62,6 +105,8 @@
 			children = (
 				05B026441AB4E14C00F6BF2B /* XcodePostFacto */,
 				05B026521AB4EA7B00F6BF2B /* Dependencies */,
+				05EEA0821AB7AA21000C8B89 /* xpf-bootstrap */,
+				05EEA08F1AB7AA22000C8B89 /* xpf-bootstrapTests */,
 				05B026431AB4E14C00F6BF2B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,6 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */,
+				05EEA0811AB7AA21000C8B89 /* libxpf-bootstrap.dylib */,
+				05EEA08B1AB7AA22000C8B89 /* xpf-bootstrapTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,7 +155,43 @@
 			path = Dependencies;
 			sourceTree = "<group>";
 		};
+		05EEA0821AB7AA21000C8B89 /* xpf-bootstrap */ = {
+			isa = PBXGroup;
+			children = (
+				05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */,
+				05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.m */,
+			);
+			path = "xpf-bootstrap";
+			sourceTree = "<group>";
+		};
+		05EEA08F1AB7AA22000C8B89 /* xpf-bootstrapTests */ = {
+			isa = PBXGroup;
+			children = (
+				05EEA0901AB7AA22000C8B89 /* Supporting Files */,
+			);
+			path = "xpf-bootstrapTests";
+			sourceTree = "<group>";
+		};
+		05EEA0901AB7AA22000C8B89 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				05EEA0911AB7AA22000C8B89 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		05EEA07F1AB7AA21000C8B89 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05EEA0841AB7AA21000C8B89 /* xpf_bootstrap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		05B026411AB4E14C00F6BF2B /* XcodePostFacto */ = {
@@ -123,11 +206,47 @@
 			buildRules = (
 			);
 			dependencies = (
+				05EEA09B1AB7AA6B000C8B89 /* PBXTargetDependency */,
 			);
 			name = XcodePostFacto;
 			productName = XcodePostFacto;
 			productReference = 05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */;
 			productType = "com.apple.product-type.bundle";
+		};
+		05EEA0801AB7AA21000C8B89 /* xpf-bootstrap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05EEA0921AB7AA22000C8B89 /* Build configuration list for PBXNativeTarget "xpf-bootstrap" */;
+			buildPhases = (
+				05EEA07D1AB7AA21000C8B89 /* Sources */,
+				05EEA07E1AB7AA21000C8B89 /* Frameworks */,
+				05EEA07F1AB7AA21000C8B89 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xpf-bootstrap";
+			productName = "xpf-bootstrap";
+			productReference = 05EEA0811AB7AA21000C8B89 /* libxpf-bootstrap.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		05EEA08A1AB7AA22000C8B89 /* xpf-bootstrapTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05EEA0951AB7AA22000C8B89 /* Build configuration list for PBXNativeTarget "xpf-bootstrapTests" */;
+			buildPhases = (
+				05EEA0871AB7AA22000C8B89 /* Sources */,
+				05EEA0881AB7AA22000C8B89 /* Frameworks */,
+				05EEA0891AB7AA22000C8B89 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05EEA08E1AB7AA22000C8B89 /* PBXTargetDependency */,
+			);
+			name = "xpf-bootstrapTests";
+			productName = "xpf-bootstrapTests";
+			productReference = 05EEA08B1AB7AA22000C8B89 /* xpf-bootstrapTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -139,6 +258,12 @@
 				ORGANIZATIONNAME = "Landon Fuller";
 				TargetAttributes = {
 					05B026411AB4E14C00F6BF2B = {
+						CreatedOnToolsVersion = 6.2;
+					};
+					05EEA0801AB7AA21000C8B89 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+					05EEA08A1AB7AA22000C8B89 = {
 						CreatedOnToolsVersion = 6.2;
 					};
 				};
@@ -157,6 +282,8 @@
 			projectRoot = "";
 			targets = (
 				05B026411AB4E14C00F6BF2B /* XcodePostFacto */,
+				05EEA0801AB7AA21000C8B89 /* xpf-bootstrap */,
+				05EEA08A1AB7AA22000C8B89 /* xpf-bootstrapTests */,
 			);
 		};
 /* End PBXProject section */
@@ -167,6 +294,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */,
+				05EEA09C1AB7AA82000C8B89 /* libxpf-bootstrap.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05EEA0891AB7AA22000C8B89 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,7 +318,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05EEA07D1AB7AA21000C8B89 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05EEA0861AB7AA21000C8B89 /* xpf_bootstrap.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05EEA0871AB7AA22000C8B89 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05EEA08E1AB7AA22000C8B89 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05EEA0801AB7AA21000C8B89 /* xpf-bootstrap */;
+			targetProxy = 05EEA08D1AB7AA22000C8B89 /* PBXContainerItemProxy */;
+		};
+		05EEA09B1AB7AA6B000C8B89 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05EEA0801AB7AA21000C8B89 /* xpf-bootstrap */;
+			targetProxy = 05EEA09A1AB7AA6B000C8B89 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		05B026471AB4E14C00F6BF2B /* Debug */ = {
@@ -308,6 +471,74 @@
 			};
 			name = Release;
 		};
+		05EEA0931AB7AA22000C8B89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Dependencies",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INSTALL_PATH = "@rpath";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05EEA0941AB7AA22000C8B89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Dependencies",
+				);
+				INSTALL_PATH = "@rpath";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		05EEA0961AB7AA22000C8B89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "xpf-bootstrapTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05EEA0971AB7AA22000C8B89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "xpf-bootstrapTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -328,6 +559,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		05EEA0921AB7AA22000C8B89 /* Build configuration list for PBXNativeTarget "xpf-bootstrap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05EEA0931AB7AA22000C8B89 /* Debug */,
+				05EEA0941AB7AA22000C8B89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05EEA0951AB7AA22000C8B89 /* Build configuration list for PBXNativeTarget "xpf-bootstrapTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05EEA0961AB7AA22000C8B89 /* Debug */,
+				05EEA0971AB7AA22000C8B89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
