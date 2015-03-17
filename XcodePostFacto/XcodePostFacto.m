@@ -27,18 +27,47 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "XcodePostFacto.h"
-#import "XPFLog.h"
-
+#import <AppKit/AppKit.h>
 #import <PLPatchMaster/PLPatchMaster.h>
 
+#import "XcodePostFacto.h"
+#import "XPFYosemiteFacade.h"
+#import "XPFLog.h"
+#import <dlfcn.h>
+
+// from DVTFoundation -- partial API
+@interface DVTVersion : NSObject <NSCopying>
++ (id)currentSystemVersion;
++ (id)versionWithStringValue:(id)arg1;
++ (id)versionWithStringValue:(id)arg1 buildNumber:(id)arg2;
+@property(readonly, copy) NSString *stringValue;
+@end
+
+extern DVTVersion *DVTCurrentSystemVersionAvailabilityForm();
+
 @implementation XcodePostFacto
+
+static unsigned int Yosemite_DVTCurrentSystemVersionAvailabilityForm () { return 101000; }
+
+/* 6.3 enables/disables broken 10.9 compatbility code based on the current system version; the value returned by -currentSystemVersion is
+ * cached by DVTCurrentSystemVersionAvailabilityForm in DVTFoundation, so we need to win the race and patch -currentSystemVersion before
+ * DVTCurrentSystemVersionAvailabilityForm() caches it. */
++ (void) load {
+    XPFLog(@"Patched DVTVersion");
+    
+    [[PLPatchMaster master] rebindSymbol: @"_DVTCurrentSystemVersionAvailabilityForm" fromImage: @"DVTFoundation" replacementAddress: (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm];
+    
+    [[PLPatchMaster master] rebindSymbol: @"_OBJC_CLASS_$_NSVisualEffectView" fromImage: @"" replacementAddress: (uintptr_t) [NSView class]];
+    
+    [[PLPatchMaster master] patchFutureClassWithName: @"DVTVersion" selector: @selector(currentSystemVersion) replacementBlock: ^(PLPatchIMP *patch) {
+        // TODO - Should we patch selectively based on our caller?
+        return [NSClassFromString(@"DVTVersion") versionWithStringValue: @"10.10.0" buildNumber: @"14A389"];
+    }];
+}
 
 // from IDEInitialization protocol
 + (BOOL) ide_initializeWithOptions: (int) flags error: (NSError **) arg2 {
     XPFLog(@"Initial plugin initialization");
-    
-    
     
     return YES;
 }

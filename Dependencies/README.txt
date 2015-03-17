@@ -6,7 +6,7 @@ PLPatchMaster.framework
       of Xcode and system APIs.
 
     Version:
-      PLPatchMaster revision 8eae1dfcff33d7bd4da2e7775c656defcbb4cb82 built from https://opensource.plausible.coop/src/projects/PLTP/repos/plpatchmaster
+      PLPatchMaster revision 81b3bcd864925a2bd2e7f06f1b848d4c8bfb0d3e built from https://opensource.plausible.coop/src/projects/PLTP/repos/plpatchmaster
 
     License:
       MIT

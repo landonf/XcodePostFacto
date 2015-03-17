@@ -12,6 +12,7 @@
 		05B026BA1AB4F64F00F6BF2B /* PLPatchMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */; };
+		05EEA05B1AB53927000C8B89 /* XPFYosemiteFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +41,8 @@
 		05B026A71AB4EA7B00F6BF2B /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05B026BC1AB4F68300F6BF2B /* XcodePostFacto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodePostFacto.h; sourceTree = "<group>"; };
 		05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFacto.m; sourceTree = "<group>"; };
+		05EEA0591AB53927000C8B89 /* XPFYosemiteFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPFYosemiteFacade.h; sourceTree = "<group>"; };
+		05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPFYosemiteFacade.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +82,8 @@
 				05B0264E1AB4E1D000F6BF2B /* XPFDebugMenu.h */,
 				05B0264F1AB4E1D000F6BF2B /* XPFDebugMenu.m */,
 				05B026511AB4E30B00F6BF2B /* XPFLog.h */,
+				05EEA0591AB53927000C8B89 /* XPFYosemiteFacade.h */,
+				05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */,
 				05B026451AB4E14C00F6BF2B /* Supporting Files */,
 			);
 			path = XcodePostFacto;
@@ -173,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */,
+				05EEA05B1AB53927000C8B89 /* XPFYosemiteFacade.m in Sources */,
 				05B026501AB4E1D000F6BF2B /* XPFDebugMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,6 +223,13 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+					"-Werror",
+					"-Wno-unused-parameter",
+					"-Wno-undeclared-selector",
+				);
 			};
 			name = Debug;
 		};
@@ -251,6 +264,13 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+					"-Werror",
+					"-Wno-unused-parameter",
+					"-Wno-undeclared-selector",
+				);
 			};
 			name = Release;
 		};
