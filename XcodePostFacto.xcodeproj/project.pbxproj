@@ -13,10 +13,11 @@
 		05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */; };
 		05EEA05B1AB53927000C8B89 /* XPFYosemiteFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */; };
-		05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.m */; };
+		05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */; };
 		05EEA0BD1AB7B3B3000C8B89 /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05EEA0BF1AB7B3C3000C8B89 /* PLPatchMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05EEA0C21AB7B420000C8B89 /* XcodePostFacto.ideplugin in Resources */ = {isa = PBXBuildFile; fileRef = 05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */; };
+		05EEA0C41AB7BFEC000C8B89 /* dyld_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,11 +69,12 @@
 		05EEA0591AB53927000C8B89 /* XPFYosemiteFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPFYosemiteFacade.h; sourceTree = "<group>"; };
 		05EEA05A1AB53927000C8B89 /* XPFYosemiteFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPFYosemiteFacade.m; sourceTree = "<group>"; };
 		05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpf_bootstrap.h; sourceTree = "<group>"; };
-		05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xpf_bootstrap.m; sourceTree = "<group>"; };
+		05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = xpf_bootstrap.mm; sourceTree = "<group>"; };
 		05EEA08B1AB7AA22000C8B89 /* xpf-bootstrapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xpf-bootstrapTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05EEA0911AB7AA22000C8B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05EEA0A31AB7B354000C8B89 /* xpf-bootstrap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "xpf-bootstrap.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05EEA0A61AB7B354000C8B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,7 +163,8 @@
 			isa = PBXGroup;
 			children = (
 				05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */,
-				05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.m */,
+				05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */,
+				05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */,
 				05EEA0A51AB7B354000C8B89 /* Supporting Files */,
 			);
 			path = "xpf-bootstrap";
@@ -198,6 +201,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05EEA0C41AB7BFEC000C8B89 /* dyld_priv.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +351,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.m in Sources */,
+				05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +540,11 @@
 				INFOPLIST_FILE = "xpf-bootstrap/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					AppKit,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -559,6 +568,11 @@
 				INFOPLIST_FILE = "xpf-bootstrap/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					AppKit,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
