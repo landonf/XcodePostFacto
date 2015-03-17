@@ -35,7 +35,7 @@ To resolve these issues, we must patch Xcode and system libraries: disabling the
 XcodePostFacto leverages the following mechanisms to achieve this:
 
 * Prior to Xcode's main(), the private `dyld_register_image_state_change_handler` API is used to hook `dyld` and modify library symbol references that are critical to bootstrapping the process:
-	*  After the library has been rebased, but before it has been linked, we use a custom single-stepping implementation of dyld symbol rebinding is used to find strong references to Yosemite-only symbols, and rewrite them as weak references.
-	* Once the library has been linked, we use the same `BIND_OPCODE_*` evaluator to rebind symbols to our custom replacements.
+	*  After the library has been rebased, but before it has been linked, we use a custom single-stepping implementation of dyld symbol rebinding to find strong references to Yosemite-only symbols and rewrite them as weak references.
+	* Once the library has been linked, but before it has been initialized, we use the same `BIND_OPCODE_*` evaluator to rebind symbols to our custom replacements.
 * Before handing control back to Xcode, the bootstrap code uses my [PLPatchMaster](https://opensource.plausible.coop/src/projects/PLTP/repos/plpatchmaster/browse) library to register a future patch on Xcode's `DVTPlugInManager` class. This patch adds `xpf_bootstrap.framework/Contents/Resources/Xcode` to `DVTPlugInManager`'s plugin search path. 
 * A custom plugin in `xpf_bootstrap.framework/Contents/Resources/Xcode` uses Xcode's standard plugin mechanisms to hook the `IDEInitialize` step, performing a final set of bootstrap operations within the now-initialized Xcode process.
