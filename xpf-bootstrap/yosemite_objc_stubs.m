@@ -28,47 +28,40 @@
  */
 
 #import <AppKit/AppKit.h>
-#import <PLPatchMaster/PLPatchMaster.h>
+#import "yosemite_objc_stubs.h"
 
-#import "XcodePostFacto.h"
-#import "XPFLog.h"
-#import <dlfcn.h>
-
-// from DVTFoundation -- partial API
-@interface DVTVersion : NSObject <NSCopying>
-+ (id)currentSystemVersion;
-+ (id)versionWithStringValue:(id)arg1;
-+ (id)versionWithStringValue:(id)arg1 buildNumber:(id)arg2;
-@property(readonly, copy) NSString *stringValue;
-@end
-
-@implementation XcodePostFacto
-
-// from IDEInitialization protocol
-+ (BOOL) ide_initializeWithOptions: (int) flags error: (NSError **) arg2 {
-    XPFLog(@"Initial plugin initialization");
-
-    /* Bind a stand-in for NSVisualEffectView */
-    [[PLPatchMaster master] rebindSymbol: @"_OBJC_CLASS_$_NSVisualEffectView" fromImage: @"AppKit" replacementAddress: (uintptr_t) [NSView class]];
-    
-    return YES;
-}
-
-#if 0
-
-/**
- * Return the default plugin instance.
+/*
+ * This file binds (via ObjC categories) Yosemite-only methods that are required to run Xcode.
  */
-+ (instancetype) defaultPlugin {
-    static XcodePostFactoPlugin *defaultInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        defaultInstance = [[self alloc] init];
-    });
-    
-    return defaultInstance;
-}
 
-#endif
+/* We're intentionally implementing methods that *would* be implemented in 10.10 */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
+#define FACADE(_cls) @interface _cls (XPFYosemiteFacade) @end @implementation _cls (XPFYosemiteFacade)
+
+FACADE(NSLayoutConstraint)
++ (void)activateConstraints:(NSArray *)constraints { }
++ (void)deactivateConstraints:(NSArray *)constraints { }
 @end
+
+FACADE(NSColor)
++ (NSColor *) labelColor { return [self controlTextColor]; }
++ (NSColor *) secondaryLabelColor { return [self disabledControlTextColor]; }
+@end
+
+FACADE(NSOperationQueue)
+- (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
+@end
+
+FACADE(NSToolbarItem)
+- (void) setWantsToBeCentered: (BOOL) centered { }
+@end
+
+FACADE(NSWindow)
+- (void) setTitleVisibility: (BOOL) visibility {}
+- (void) setTitlebarAppearsTransparent: (BOOL) appearsTransparent {}
+- (void) setTitleMode: (NSUInteger) titleMode {}
+@end
+
+#pragma clang diagnostic pop

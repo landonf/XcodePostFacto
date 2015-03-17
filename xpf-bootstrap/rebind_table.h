@@ -1,6 +1,7 @@
 /*
- * Author: Landon Fuller <landonf@plausiblelabs.com>
+ * Author: Landon Fuller <landon@landonf.org>
  *
+ * Copyright (c) 2015 Landon Fuller <landon@landonf.org>
  * Copyright (c) 2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
@@ -26,4 +27,27 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#include <string>
+#include <stdlib.h>
+#include <vector>
+
+namespace xpf {
+
+/**
+ * Rebind table entry.
+ */
+struct rebind_entry {
+    /** Name of the symbol to rebind. */
+    const char *symbol;
+    
+    /** Image containing the symbol to be rebound. */
+    const char *image;
+
+    /** Replacement symbol address */
+    uintptr_t replacement;
+};
+    
+extern const rebind_entry bootstrap_rebind_table[];
+extern const size_t bootstrap_rebind_table_length;
+
+}

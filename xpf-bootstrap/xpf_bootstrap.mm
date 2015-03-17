@@ -32,12 +32,89 @@
 #import <PLPatchMaster/SymbolBinder.hpp>
 #import <AppKit/AppKit.h>
 
+#import "rebind_table.h"
+
 #import "dyld_priv.h"
 #import "XPFLog.h"
 
 using namespace patchmaster;
 
-static void rewrite_bind_opcodes (const LocalImage &image) {
+namespace xpf {
+
+static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]);
+static void image_rewrite_bind_opcodes (const LocalImage &image);
+static void image_rebind_required_symbols (LocalImage &image);
+
+/**
+ * Pre-main initialization (non-ObjC).
+ */
+__attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
+    /* Register our state change callback */
+    dyld_register_image_state_change_handler(dyld_image_state_rebased, true, xpf_image_state_change);
+    
+    /* Perform immediate rebinding on already loaded images. */
+    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
+        auto image = LocalImage::Analyze(_dyld_get_image_name(i), (const pl_mach_header_t *) _dyld_get_image_header(i));
+        image_rebind_required_symbols(image);
+    }
+}
+
+
+/**
+ * Given a bound -- but not yet initialized -- image, apply symbol rebindings required to bootstrap Xcode.
+ */
+static void image_rebind_required_symbols (LocalImage &image) {
+    /* Loop over all symbol references in the image */
+    image.rebind_symbols([&](const bind_opstream::symbol_proc &sp) {
+        /* Iterate the bootstrap rebind table looking for a matching patch entry. */
+        for (size_t i = 0; i < bootstrap_rebind_table_length; i++) {
+            const rebind_entry &entry = bootstrap_rebind_table[i];
+
+            /* Check for a symbol match */
+            if (!sp.name().match(SymbolName(entry.image, entry.symbol)))
+                continue;
+    
+            XPFLog(@"Binding %s:%s in %s:%lx", sp.name().image().c_str(), sp.name().symbol().c_str(), image.path().c_str(), sp.bind_address());
+            
+            /* On match, insert the new value */
+            uintptr_t *target = (uintptr_t * ) sp.bind_address();
+            if (*target != entry.replacement)
+                *target = entry.replacement;
+        }
+    });
+}
+
+/**
+ * Our on-rebase state change callback; responsible for performing any modifications to the image that are necessary pre-bind.
+ */
+static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]) {
+    for (uint32_t i = 0; i < infoCount; i++) {
+        LocalImage image = LocalImage::Analyze(info[i].imageFilePath, (const pl_mach_header_t *) info[i].imageLoadAddress);
+
+        switch (state) {
+            case dyld_image_state_rebased:
+                /* Rewrite all weak references. */
+                image_rewrite_bind_opcodes(image);
+                break;
+                
+            case dyld_image_state_bound:
+                /* Rebind required symbols */
+                image_rebind_required_symbols(image);
+                break;
+
+            default:
+                break;
+        }
+    }
+    return NULL;
+}
+
+
+/**
+ * Rewrite the bind instructions of a newly loaded image, detecting and marking as weak any missing
+ * symbols.
+ */
+static void image_rewrite_bind_opcodes (const LocalImage &image) {
     /* Find the LINKEDIT segment; we need this to be able to reset memory protections
      * back to their original values. */
     const pl_segment_command_t *linkedit = nullptr;
@@ -149,48 +226,4 @@ static void rewrite_bind_opcodes (const LocalImage &image) {
     }
 }
 
-static const char *image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]) {
-    for (uint32_t i = 0; i < infoCount; i++) {
-        /* Perform any necessary fixups */
-        rewrite_bind_opcodes(LocalImage::Analyze(info[i].imageFilePath, (const pl_mach_header_t *) info[i].imageLoadAddress));
-    }
-    return NULL;
-}
-
-/*
- * Xcode 6.3 enables/disables broken 10.9 compatibility code based on the current system version; we supply
- * a patch that claims to be Yosemite 10.0.0.
- *
- * The version itself is cached in a number of locations after it is computed, necessitating that our patch
- * be in place before it's called by anyone.
- *
- * TODO: We may want to investigate patching the code in-place, or finding an alternative method for dealing
- * with local DVTFoundation references to DVTCurrentSystemVersionAvailabilityForm().
- */
-extern unsigned int DVTCurrentSystemVersionAvailabilityForm();
-static unsigned int Yosemite_DVTCurrentSystemVersionAvailabilityForm () { return 101000; }
-
-__attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
-    dyld_register_image_state_change_handler(dyld_image_state_rebased, false, image_state_change);
-    
-    [[PLPatchMaster master] rebindSymbol: @"_DVTCurrentSystemVersionAvailabilityForm" fromImage: @"DVTFoundation" replacementAddress: (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm];
-    
-    [NSOperationQueue pl_patchInstanceSelector: @selector(setQualityOfService:) withReplacementBlock: ^(PLPatchIMP *imp, NSUInteger qos) {}];
-}
-
-/* We're intentionally implementing methods that *would* be implemented in 10.10 */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
-
-#define FACADE(_cls) @interface _cls (XPFYosemiteFacade) @end @implementation _cls (XPFYosemiteFacade)
-
-FACADE(NSColor)
-+ (NSColor *) labelColor { return [self controlTextColor]; }
-+ (NSColor *) secondaryLabelColor { return [self disabledControlTextColor]; }
-@end
-
-FACADE(NSOperationQueue)
-- (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
-@end
-
-#pragma clang diagnostic pop
+} /* namespace xpf */

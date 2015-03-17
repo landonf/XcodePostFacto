@@ -1,6 +1,7 @@
 /*
- * Author: Landon Fuller <landonf@plausiblelabs.com>
+ * Author: Landon Fuller <landon@landonf.org>
  *
+ * Copyright (c) 2015 Landon Fuller <landon@landonf.org>
  * Copyright (c) 2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
@@ -25,31 +26,3 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-
-#import "XPFYosemiteFacade.h"
-#import <AppKit/AppKit.h>
-
-/* We're intentionally implementing methods that *would* be implemented in 10.10 */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
-
-#define FACADE(_cls) @interface _cls (XPFYosemiteFacade) @end @implementation _cls (XPFYosemiteFacade)
-
-FACADE(NSColor)
-+ (NSColor *) labelColor { return [self controlTextColor]; }
-+ (NSColor *) secondaryLabelColor { return [self disabledControlTextColor]; }
-@end
-
-FACADE(NSOperationQueue)
-- (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
-@end
-
-FACADE(NSToolbarItem)
-- (void) setWantsToBeCentered: (BOOL) centered { }
-@end
-
-FACADE(NSWindow)
-- (void) setTitleMode: (NSUInteger) titleMode {}
-@end
-
-#pragma clang diagnostic pop
