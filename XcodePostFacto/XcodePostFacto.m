@@ -42,11 +42,30 @@
 @property(readonly, copy) NSString *stringValue;
 @end
 
+/* Replacement frameworks bundled with Xcode that are required for Mavericks */
+static NSString* sharedFrameworks[] = {
+    @"SceneKit.framework",
+    @"PhysicsKit.framework",
+    @"SpriteKit.framework"
+};
+
 @implementation XcodePostFacto
 
 // from IDEInitialization protocol
 + (BOOL) ide_initializeWithOptions: (int) flags error: (NSError **) arg2 {
-    XPFLog(@"Initial plugin initialization");
+    NSError *error;
+
+    /* Since we pretend to be 10.10, we have to implement shared framework loading ourselves.
+     * This is normally done in IDEFoundation:__IDEInitializeLoadSharedFrameworksFor10_9 */
+    XPFLog(@"Initializing Mavericks shared frameworks");
+    for (size_t i = 0; i < sizeof(sharedFrameworks) / sizeof(sharedFrameworks[0]); i++) {
+        NSString *framework = sharedFrameworks[i];
+        NSString *path = [[[NSBundle mainBundle] sharedFrameworksPath] stringByAppendingPathComponent: framework];
+        
+        if (![[NSBundle bundleWithPath: path] loadAndReturnError: &error]) {
+            NSLog(@"Failed to load %@: %@", framework, error);
+        }
+    }
     
     return YES;
 }

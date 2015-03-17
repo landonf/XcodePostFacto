@@ -53,6 +53,12 @@ FACADE(NSOperationQueue)
 - (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
 @end
 
+
+FACADE(NSOperation)
+- (NSQualityOfService) qualityOfService {return NSQualityOfServiceDefault; }
+- (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
+@end
+
 FACADE(NSToolbarItem)
 - (void) setWantsToBeCentered: (BOOL) centered { }
 @end
@@ -65,6 +71,11 @@ FACADE(NSWindow)
 
 FACADE(NSTextView)
 - (void) setUsesRolloverButtonForSelection: (BOOL) usesRolloverButtonForSelection {}
+@end
+
+FACADE(NSScrollView)
+- (BOOL) automaticallyAdjustsContentInsets { return false; }
+- (void) setAutomaticallyAdjustsContentInsets: (BOOL) automaticallyAdjustsContentInsets { }
 @end
 
 #pragma clang diagnostic pop
