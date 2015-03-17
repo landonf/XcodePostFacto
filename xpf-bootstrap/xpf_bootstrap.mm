@@ -32,6 +32,7 @@
 #import <AppKit/AppKit.h>
 
 #import "rebind_table.h"
+#import "cfbundle_rebind.h"
 
 #import "XPFLog.h"
 
@@ -43,6 +44,7 @@ using namespace xpf;
 
 static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]);
 static void image_rewrite_bind_opcodes (const LocalImage &image);
+static void image_rebind_required_symbols (LocalImage &image, const rebind_entry table[], size_t table_len);
 static void image_rebind_required_symbols (LocalImage &image);
 
 /**
@@ -55,7 +57,8 @@ __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
     /* Perform immediate rebinding on already loaded images. */
     for (uint32_t i = 0; i < _dyld_image_count(); i++) {
         auto image = LocalImage::Analyze(_dyld_get_image_name(i), (const pl_mach_header_t *) _dyld_get_image_header(i));
-        image_rebind_required_symbols(image);
+        image_rebind_required_symbols(image, bootstrap_rebind_table, bootstrap_rebind_table_length);
+        image_rebind_required_symbols(image, cfbundle_rebind_table, cfbundle_rebind_table_length);
     }
 }
 
@@ -82,13 +85,31 @@ __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
 
 /**
  * Given a bound -- but not yet initialized -- image, apply symbol rebindings required to bootstrap Xcode.
+ *
+ * Note that this function will provide incorrect original addresses if the image has not already been bound.
+ *
+ * @param image Image to rebind.
  */
 static void image_rebind_required_symbols (LocalImage &image) {
+    image_rebind_required_symbols(image, bootstrap_rebind_table, bootstrap_rebind_table_length);
+    image_rebind_required_symbols(image, cfbundle_rebind_table, cfbundle_rebind_table_length);
+}
+
+/**
+ * Given a bound -- but not yet initialized -- image, apply symbol rebindings from @a table.
+ *
+ * Note that this function will provide incorrect original addresses if the image has not already been bound.
+ *
+ * @param image Image to rebind.
+ * @param table Rebind table to apply.
+ * @param table_len Number of entries in @a table.
+ */
+static void image_rebind_required_symbols (LocalImage &image, const rebind_entry table[], size_t table_len) {
     /* Loop over all symbol references in the image */
     image.rebind_symbols([&](const bind_opstream::symbol_proc &sp) {
         /* Iterate the bootstrap rebind table looking for a matching patch entry. */
-        for (size_t i = 0; i < bootstrap_rebind_table_length; i++) {
-            const rebind_entry &entry = bootstrap_rebind_table[i];
+        for (size_t i = 0; i < table_len; i++) {
+            const rebind_entry &entry = table[i];
 
             /* Check for a symbol match */
             if (!sp.name().match(SymbolName(entry.image, entry.symbol)))
@@ -96,8 +117,12 @@ static void image_rebind_required_symbols (LocalImage &image) {
     
             XPFLog(@"Binding %s:%s in %s:%lx to %lx", sp.name().image().c_str(), sp.name().symbol().c_str(), image.path().c_str(), sp.bind_address(), entry.replacement);
             
-            /* On match, insert the new value */
+            /* On match, save the previous value, insert the new value */
             uintptr_t *target = (uintptr_t * ) sp.bind_address();
+            
+            if (entry.original != NULL)
+                *entry.original = (void *) *target;
+            
             if (*target != entry.replacement)
                 *target = entry.replacement;
         }

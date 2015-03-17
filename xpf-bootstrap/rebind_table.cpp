@@ -51,8 +51,8 @@ const rebind_entry bootstrap_rebind_table[] = {
      * TODO: We may want to investigate patching the code in-place, or finding an alternative method for dealing
      * with local DVTFoundation references to DVTCurrentSystemVersionAvailabilityForm().
      */
-    { "_DVTCurrentSystemVersionAvailabilityForm",  "DVTFoundation",   (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm },
-    { "_OBJC_CLASS_$_NSVisualEffectView",          "AppKit",          (uintptr_t) &OBJC_CLASS_$_XPF_NSVisualEffectView }
+    { "_DVTCurrentSystemVersionAvailabilityForm",  "DVTFoundation",   NULL, (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm },
+    { "_OBJC_CLASS_$_NSVisualEffectView",          "AppKit",          NULL, (uintptr_t) &OBJC_CLASS_$_XPF_NSVisualEffectView }
 
 };
 

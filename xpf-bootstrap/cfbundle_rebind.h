@@ -26,30 +26,12 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <string>
-#include <stdlib.h>
-#include <vector>
+#import <CoreFoundation/CoreFoundation.h>
+#import "rebind_table.h"
 
 namespace xpf {
 
-/**
- * Rebind table entry.
- */
-struct rebind_entry {
-    /** Name of the symbol to rebind. */
-    const char *symbol;
-    
-    /** Image containing the symbol to be rebound. */
-    const char *image;
-    
-    /** Location to store the original symbol address, or NULL. */
-    void **original;
-
-    /** Replacement symbol address */
-    uintptr_t replacement;
-};
-    
-extern const rebind_entry bootstrap_rebind_table[];
-extern const size_t bootstrap_rebind_table_length;
+extern const rebind_entry cfbundle_rebind_table[];
+extern const size_t cfbundle_rebind_table_length;
 
 }

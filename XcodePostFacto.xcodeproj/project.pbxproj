@@ -13,6 +13,8 @@
 		05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */; };
 		05C258AE1AB8202F007DD20C /* XcodePostFacto.ideplugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05C258B31AB8A667007DD20C /* cfbundle_rebind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */; };
+		05C258B41AB8A667007DD20C /* cfbundle_rebind.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C258B21AB8A667007DD20C /* cfbundle_rebind.h */; };
 		05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */; };
 		05EEA0BD1AB7B3B3000C8B89 /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05EEA0BF1AB7B3C3000C8B89 /* PLPatchMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -81,6 +83,8 @@
 		05B026BC1AB4F68300F6BF2B /* XcodePostFacto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodePostFacto.h; sourceTree = "<group>"; };
 		05B026BD1AB4F68300F6BF2B /* XcodePostFacto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodePostFacto.m; sourceTree = "<group>"; };
 		05C258AF1AB89EED007DD20C /* DVTPlugInManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTPlugInManager.h; sourceTree = "<group>"; };
+		05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cfbundle_rebind.cpp; sourceTree = "<group>"; };
+		05C258B21AB8A667007DD20C /* cfbundle_rebind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cfbundle_rebind.h; sourceTree = "<group>"; };
 		05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpf_bootstrap.h; sourceTree = "<group>"; };
 		05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = xpf_bootstrap.mm; sourceTree = "<group>"; };
 		05EEA08B1AB7AA22000C8B89 /* xpf-bootstrapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xpf-bootstrapTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,6 +194,8 @@
 				05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */,
 				05EEA0D11AB7EBEB000C8B89 /* rebind_table.h */,
 				05EEA0D01AB7EBEB000C8B89 /* rebind_table.cpp */,
+				05C258B21AB8A667007DD20C /* cfbundle_rebind.h */,
+				05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */,
 				05C258B01AB89EF2007DD20C /* Xcode API */,
 				05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */,
 				05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */,
@@ -240,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05EEA0C41AB7BFEC000C8B89 /* dyld_priv.h in Headers */,
+				05C258B41AB8A667007DD20C /* cfbundle_rebind.h in Headers */,
 				05EEA0D71AB7F028000C8B89 /* yosemite_objc_stubs.h in Headers */,
 				05EEA0D31AB7EBEB000C8B89 /* rebind_table.h in Headers */,
 			);
@@ -392,6 +399,7 @@
 			files = (
 				05EEA0DA1AB80D1C000C8B89 /* NSVisualEffectView.m in Sources */,
 				05EEA0D21AB7EBEB000C8B89 /* rebind_table.cpp in Sources */,
+				05C258B31AB8A667007DD20C /* cfbundle_rebind.cpp in Sources */,
 				05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.mm in Sources */,
 				05EEA0D61AB7F028000C8B89 /* yosemite_objc_stubs.m in Sources */,
 			);
