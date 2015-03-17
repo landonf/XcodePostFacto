@@ -51,6 +51,9 @@ static void image_rebind_required_symbols (LocalImage &image);
  * Pre-main initialization (non-ObjC).
  */
 __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
+    /* XXX: As a stop-gap to fix `xcexec` execution, prevent inheritance of our bootstrap library. */
+    unsetenv("DYLD_INSERT_LIBRARIES");
+
     /* Register our state change callback */
     dyld_register_image_state_change_handler(dyld_image_state_rebased, true, xpf_image_state_change);
     
