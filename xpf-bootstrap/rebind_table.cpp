@@ -2,7 +2,6 @@
  * Author: Landon Fuller <landon@landonf.org>
  *
  * Copyright (c) 2015 Landon Fuller <landon@landonf.org>
- * Copyright (c) 2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -35,7 +34,8 @@ namespace xpf {
 /* Refer to the corresponding rebind entry below for documentation. */
 extern "C"  unsigned int DVTCurrentSystemVersionAvailabilityForm();
 static unsigned int Yosemite_DVTCurrentSystemVersionAvailabilityForm () { return 101000; }
-extern "C"  void *OBJC_CLASS_$_NSView;
+    
+extern "C" void *OBJC_CLASS_$_XPF_NSVisualEffectView;
 
 /**
  * All symbol rebindings necessary to bootstrap Xcode.
@@ -52,7 +52,8 @@ const rebind_entry bootstrap_rebind_table[] = {
      * with local DVTFoundation references to DVTCurrentSystemVersionAvailabilityForm().
      */
     { "_DVTCurrentSystemVersionAvailabilityForm",  "DVTFoundation",   (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm },
-    { "_OBJC_CLASS_$_NSVisualEffectView",          "AppKit",          (uintptr_t) OBJC_CLASS_$_NSView }
+    { "_OBJC_CLASS_$_NSVisualEffectView",          "AppKit",          (uintptr_t) &OBJC_CLASS_$_XPF_NSVisualEffectView }
+
 };
 
 const size_t bootstrap_rebind_table_length = sizeof(bootstrap_rebind_table) / sizeof(bootstrap_rebind_table[0]);

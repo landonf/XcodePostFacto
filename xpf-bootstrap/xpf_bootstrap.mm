@@ -2,7 +2,6 @@
  * Author: Landon Fuller <landon@landonf.org>
  *
  * Copyright (c) 2015 Landon Fuller <landon@landonf.org>
- * Copyright (c) 2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -74,7 +73,7 @@ static void image_rebind_required_symbols (LocalImage &image) {
             if (!sp.name().match(SymbolName(entry.image, entry.symbol)))
                 continue;
     
-            XPFLog(@"Binding %s:%s in %s:%lx", sp.name().image().c_str(), sp.name().symbol().c_str(), image.path().c_str(), sp.bind_address());
+            XPFLog(@"Binding %s:%s in %s:%lx to %lx", sp.name().image().c_str(), sp.name().symbol().c_str(), image.path().c_str(), sp.bind_address(), entry.replacement);
             
             /* On match, insert the new value */
             uintptr_t *target = (uintptr_t * ) sp.bind_address();

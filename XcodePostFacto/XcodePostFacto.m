@@ -47,9 +47,6 @@
 // from IDEInitialization protocol
 + (BOOL) ide_initializeWithOptions: (int) flags error: (NSError **) arg2 {
     XPFLog(@"Initial plugin initialization");
-
-    /* Bind a stand-in for NSVisualEffectView */
-    [[PLPatchMaster master] rebindSymbol: @"_OBJC_CLASS_$_NSVisualEffectView" fromImage: @"AppKit" replacementAddress: (uintptr_t) [NSView class]];
     
     return YES;
 }

@@ -2,7 +2,6 @@
  * Author: Landon Fuller <landon@landonf.org>
  *
  * Copyright (c) 2015 Landon Fuller <landon@landonf.org>
- * Copyright (c) 2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -62,6 +61,10 @@ FACADE(NSWindow)
 - (void) setTitleVisibility: (BOOL) visibility {}
 - (void) setTitlebarAppearsTransparent: (BOOL) appearsTransparent {}
 - (void) setTitleMode: (NSUInteger) titleMode {}
+@end
+
+FACADE(NSTextView)
+- (void) setUsesRolloverButtonForSelection: (BOOL) usesRolloverButtonForSelection {}
 @end
 
 #pragma clang diagnostic pop

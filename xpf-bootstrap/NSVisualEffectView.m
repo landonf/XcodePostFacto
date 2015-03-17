@@ -25,3 +25,17 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
+#import <AppKit/AppKit.h>
+
+@interface XPF_NSVisualEffectView : NSView
+@property NSUInteger material;
+@property NSUInteger interiorBackgroundStyle;
+@property NSInteger blendingMode;
+@property NSInteger state;
+@property NSImage *maskImage;
+@end
+
+@implementation XPF_NSVisualEffectView
+
+@end

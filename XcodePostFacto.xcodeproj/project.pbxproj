@@ -21,6 +21,8 @@
 		05EEA0D31AB7EBEB000C8B89 /* rebind_table.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EEA0D11AB7EBEB000C8B89 /* rebind_table.h */; };
 		05EEA0D61AB7F028000C8B89 /* yosemite_objc_stubs.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0D41AB7F028000C8B89 /* yosemite_objc_stubs.m */; };
 		05EEA0D71AB7F028000C8B89 /* yosemite_objc_stubs.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EEA0D51AB7F028000C8B89 /* yosemite_objc_stubs.h */; };
+		05EEA0DA1AB80D1C000C8B89 /* NSVisualEffectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0D91AB80D1C000C8B89 /* NSVisualEffectView.m */; };
+		05EEA0DC1AB8133C000C8B89 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05EEA0DB1AB8133C000C8B89 /* SpriteKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +82,8 @@
 		05EEA0D11AB7EBEB000C8B89 /* rebind_table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rebind_table.h; sourceTree = "<group>"; };
 		05EEA0D41AB7F028000C8B89 /* yosemite_objc_stubs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = yosemite_objc_stubs.m; sourceTree = "<group>"; };
 		05EEA0D51AB7F028000C8B89 /* yosemite_objc_stubs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = yosemite_objc_stubs.h; sourceTree = "<group>"; };
+		05EEA0D91AB80D1C000C8B89 /* NSVisualEffectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSVisualEffectView.m; sourceTree = "<group>"; };
+		05EEA0DB1AB8133C000C8B89 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05EEA0DC1AB8133C000C8B89 /* SpriteKit.framework in Frameworks */,
 				05EEA0BD1AB7B3B3000C8B89 /* PLPatchMaster.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,6 +122,7 @@
 				05EEA0821AB7AA21000C8B89 /* xpf-bootstrap */,
 				05EEA08F1AB7AA22000C8B89 /* xpf-bootstrapTests */,
 				05B026431AB4E14C00F6BF2B /* Products */,
+				05EEA0DB1AB8133C000C8B89 /* SpriteKit.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -169,8 +175,7 @@
 				05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */,
 				05EEA0D11AB7EBEB000C8B89 /* rebind_table.h */,
 				05EEA0D01AB7EBEB000C8B89 /* rebind_table.cpp */,
-				05EEA0D51AB7F028000C8B89 /* yosemite_objc_stubs.h */,
-				05EEA0D41AB7F028000C8B89 /* yosemite_objc_stubs.m */,
+				05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */,
 				05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */,
 				05EEA0A51AB7B354000C8B89 /* Supporting Files */,
 			);
@@ -199,6 +204,16 @@
 				05EEA0A61AB7B354000C8B89 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */ = {
+			isa = PBXGroup;
+			children = (
+				05EEA0D51AB7F028000C8B89 /* yosemite_objc_stubs.h */,
+				05EEA0D41AB7F028000C8B89 /* yosemite_objc_stubs.m */,
+				05EEA0D91AB80D1C000C8B89 /* NSVisualEffectView.m */,
+			);
+			name = "Yosemite Compat";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -359,6 +374,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05EEA0DA1AB80D1C000C8B89 /* NSVisualEffectView.m in Sources */,
 				05EEA0D21AB7EBEB000C8B89 /* rebind_table.cpp in Sources */,
 				05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.mm in Sources */,
 				05EEA0D61AB7F028000C8B89 /* yosemite_objc_stubs.m in Sources */,
