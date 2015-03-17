@@ -33,12 +33,13 @@
 
 #import "rebind_table.h"
 
-#import "dyld_priv.h"
 #import "XPFLog.h"
 
-using namespace patchmaster;
+#import "DVTPlugInManager.h"
+#import "dyld_priv.h"
 
-namespace xpf {
+using namespace patchmaster;
+using namespace xpf;
 
 static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]);
 static void image_rewrite_bind_opcodes (const LocalImage &image);
@@ -58,6 +59,26 @@ __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
     }
 }
 
+/**
+ * Pre-main initialization (ObjC)
+ */
+@interface xpf_bootstrap : NSObject @end
+@implementation xpf_bootstrap
++ (void) load {
+    /* Register a patch against DVTPlugInManager that appends our embedded Xcode developer directory to the default path list; this ensures
+     * that our embedded Xcode plugin gets picked up at IDEInitialization time. */
+    [[PLPatchMaster master] patchInstancesWithFutureClassName: @"DVTPlugInManager" selector: @selector(init) replacementBlock: ^(PLPatchIMP *imp) {
+        DVTPlugInManager *self = PLPatchGetSelf(imp);
+        if ((self = PLPatchIMPFoward(imp, id (*)(id, SEL))) == nil)
+            return (DVTPlugInManager *) nil;
+
+        NSString *embeddedDevDir = [[[NSBundle bundleForClass: [xpf_bootstrap class]] resourcePath] stringByAppendingPathComponent: @"Xcode"];
+        [self.mutableSearchPaths addObject: embeddedDevDir];
+
+        return self;
+    }];
+}
+@end
 
 /**
  * Given a bound -- but not yet initialized -- image, apply symbol rebindings required to bootstrap Xcode.
@@ -224,5 +245,3 @@ static void image_rewrite_bind_opcodes (const LocalImage &image) {
         return;
     }
 }
-
-} /* namespace xpf */
