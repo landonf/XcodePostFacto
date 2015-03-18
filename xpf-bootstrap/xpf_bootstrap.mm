@@ -27,9 +27,7 @@
  */
 
 #import "xpf_bootstrap.h"
-#import <PLPatchMaster/PLPatchMaster.h>
 #import <PLPatchMaster/SymbolBinder.hpp>
-#import <AppKit/AppKit.h>
 
 #import "rebind_table.h"
 #import "cfbundle_rebind.h"
@@ -38,61 +36,39 @@
 
 #import "DVTPlugInManager.h"
 #import "dyld_priv.h"
+#import <objc/runtime.h>
 
 using namespace patchmaster;
 using namespace xpf;
 
 static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]);
+static void xpf_add_image_callback (const struct mach_header *header, intptr_t vm_slide);
+
 static void image_rewrite_bind_opcodes (const LocalImage &image);
 static void image_rebind_required_symbols (LocalImage &image, const rebind_entry table[], size_t table_len);
 static void image_rebind_required_symbols (LocalImage &image);
+static void image_insert_xcode_plugin_path ();
+
 
 /* Symbols to be marked as weak. */
 static const struct weak_entry {
     const char *library;
     const char *symbol;
 } weak_symbols[] = {
-    { "/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit", "_OBJC_CLASS_$_SCNParticlePropertyController" }
+    { "/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit", "_OBJC_CLASS_$_SCNParticlePropertyController" },
+    { "/usr/lib/libSystem.B.dylib", "_posix_spawnattr_set_qos_class_np" }
 };
 
 /**
  * Pre-main initialization (non-ObjC).
  */
 __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
-    /* XXX: As a stop-gap to fix `xcexec` execution, prevent inheritance of our bootstrap library. */
-    unsetenv("DYLD_INSERT_LIBRARIES");
-
     /* Register our state change callback */
     dyld_register_image_state_change_handler(dyld_image_state_rebased, true, xpf_image_state_change);
     
-    /* Perform immediate rebinding on already loaded images. */
-    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
-        auto image = LocalImage::Analyze(_dyld_get_image_name(i), (const pl_mach_header_t *) _dyld_get_image_header(i));
-        image_rebind_required_symbols(image, bootstrap_rebind_table, bootstrap_rebind_table_length);
-        image_rebind_required_symbols(image, cfbundle_rebind_table, cfbundle_rebind_table_length);
-    }
+    /* Use the standard dyld callback for all other rebindings */
+    _dyld_register_func_for_add_image(xpf_add_image_callback);
 }
-
-/**
- * Pre-main initialization (ObjC)
- */
-@interface xpf_bootstrap : NSObject @end
-@implementation xpf_bootstrap
-+ (void) load {
-    /* Register a patch against DVTPlugInManager that appends our embedded Xcode developer directory to the default path list; this ensures
-     * that our embedded Xcode plugin gets picked up at IDEInitialization time. */
-    [[PLPatchMaster master] patchInstancesWithFutureClassName: @"DVTPlugInManager" selector: @selector(init) replacementBlock: ^(PLPatchIMP *imp) {
-        DVTPlugInManager *self = PLPatchGetSelf(imp);
-        if ((self = PLPatchIMPFoward(imp, id (*)(id, SEL))) == nil)
-            return (DVTPlugInManager *) nil;
-
-        NSString *embeddedDevDir = [[[NSBundle bundleForClass: [xpf_bootstrap class]] resourcePath] stringByAppendingPathComponent: @"Xcode"];
-        [self.mutableSearchPaths addObject: embeddedDevDir];
-
-        return self;
-    }];
-}
-@end
 
 /**
  * Given a bound -- but not yet initialized -- image, apply symbol rebindings required to bootstrap Xcode.
@@ -128,10 +104,10 @@ static void image_rebind_required_symbols (LocalImage &image, const rebind_entry
     
             // XPFLog(@"Binding %s:%s in %s:%lx to %lx", sp.name().image().c_str(), sp.name().symbol().c_str(), image.path().c_str(), sp.bind_address(), entry.replacement);
             
-            /* On match, save the previous value, insert the new value */
+            /* On match, save the previous value (if it hasn't already been saved) and insert the new value */
             uintptr_t *target = (uintptr_t * ) sp.bind_address();
             
-            if (entry.original != NULL)
+            if (entry.original != NULL && *entry.original == NULL)
                 *entry.original = (void *) *target;
             
             if (*target != entry.replacement)
@@ -144,25 +120,84 @@ static void image_rebind_required_symbols (LocalImage &image, const rebind_entry
  * Our on-rebase state change callback; responsible for performing any modifications to the image that are necessary pre-bind.
  */
 static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]) {
+    /* Rewrite all weak references. */
     for (uint32_t i = 0; i < infoCount; i++) {
         LocalImage image = LocalImage::Analyze(info[i].imageFilePath, (const pl_mach_header_t *) info[i].imageLoadAddress);
-
-        switch (state) {
-            case dyld_image_state_rebased:
-                /* Rewrite all weak references. */
-                image_rewrite_bind_opcodes(image);
-                break;
-                
-            case dyld_image_state_bound:
-                /* Rebind required symbols */
-                image_rebind_required_symbols(image);
-                break;
-
-            default:
-                break;
-        }
+        image_rewrite_bind_opcodes(image);
     }
+
     return NULL;
+}
+
+/**
+ * Image add callback; used to perform symbol rebinding and Objective-C patching after images have been fully loaded.
+ */
+static void xpf_add_image_callback (const struct mach_header *header, intptr_t vm_slide) {
+    const char *name = nullptr;
+    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
+        if (_dyld_get_image_header(i) != header)
+            continue;
+        
+        name = _dyld_get_image_name(i);
+    }
+
+    /* This would be odd ... */
+    if (name == nullptr) {
+        return;
+    }
+
+    /* Perform symbol rebinding. */
+    auto image = LocalImage::Analyze(name, (const pl_mach_header_t *) header);
+    image_rebind_required_symbols(image);
+    
+    /* Apply ObjC patch to any existing loaded images. */
+    image_insert_xcode_plugin_path();
+}
+
+
+/*
+ * This is the only Objective-C patch that /must/ be applied early on at the bootstrap level -- we swizzle DVTPlugInManager,
+ * appending our embedded Xcode developer directory to the default path list; this ensures
+ * that our embedded Xcode plugin gets picked up at IDEInitialization time. 
+ */
+static id (*orig_DVTPlugInManager_init) (DVTPlugInManager *self, SEL _cmd);
+static id xpf_DVTPlugInManager_init (DVTPlugInManager *self, SEL _cmd) {
+    if ((self = orig_DVTPlugInManager_init(self, _cmd)) == nil)
+        return nil;
+    
+    NSBundle *bundle = [NSBundle bundleWithIdentifier: @"org.landonf.xpf-bootstrap"];
+    NSString *embeddedDevDir = [[bundle resourcePath] stringByAppendingPathComponent: @"Xcode"];
+    [self.mutableSearchPaths addObject: embeddedDevDir];
+    
+    return self;
+}
+
+/**
+ * Called upon image load to perform swizzling of DVTPlugInManager, if necessary.
+ */
+static void image_insert_xcode_plugin_path () {
+    /* Already patched */
+    if (orig_DVTPlugInManager_init != nullptr)
+        return;
+    
+    /* Check for the class. */
+    Class cls = objc_getClass("DVTPlugInManager");
+    if (cls == nil)
+        return;
+    
+    /* If available, perform the swap */
+    Method m = class_getInstanceMethod(cls, @selector(init));
+    if (m == NULL)
+        return;
+
+    /* Save the old implementation, insert the new. */
+    orig_DVTPlugInManager_init = (decltype(orig_DVTPlugInManager_init)) method_getImplementation(m);
+    IMP newIMP = (IMP) xpf_DVTPlugInManager_init;
+    
+    if (!class_addMethod(cls, @selector(init), newIMP, method_getTypeEncoding(m))) {
+        /* Method already exists in subclass, we just need to swap the IMP */
+        method_setImplementation(m, newIMP);
+    }
 }
 
 
@@ -223,7 +258,7 @@ static void image_rewrite_bind_opcodes (const LocalImage &image) {
                 found = true;
                 break;
             }
-    
+
             /* Mark the sumbol as weak if it's not already */
             if (!(sp.flags() & BIND_SYMBOL_FLAGS_WEAK_IMPORT)) {
                 /* Rewrite the symbol flags */

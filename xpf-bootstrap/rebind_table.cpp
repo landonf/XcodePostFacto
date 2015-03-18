@@ -27,15 +27,19 @@
  */
 
 #include "rebind_table.h"
-
+#include <spawn.h>
+#include <sys/qos.h>
 
 namespace xpf {
 
 /* Refer to the corresponding rebind entry below for documentation. */
 extern "C"  unsigned int DVTCurrentSystemVersionAvailabilityForm();
 static unsigned int Yosemite_DVTCurrentSystemVersionAvailabilityForm () { return 101000; }
-    
+
+
 extern "C" void *OBJC_CLASS_$_XPF_NSVisualEffectView;
+
+static int xpf_posix_spawnattr_set_qos_class_np (posix_spawnattr_t *attr, qos_class_t qos_class) { return 0; }
 
 /**
  * All symbol rebindings necessary to bootstrap Xcode.
@@ -51,8 +55,9 @@ const rebind_entry bootstrap_rebind_table[] = {
      * TODO: We may want to investigate patching the code in-place, or finding an alternative method for dealing
      * with local DVTFoundation references to DVTCurrentSystemVersionAvailabilityForm().
      */
-    { "_DVTCurrentSystemVersionAvailabilityForm",  "DVTFoundation",   NULL, (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm },
-    { "_OBJC_CLASS_$_NSVisualEffectView",          "AppKit",          NULL, (uintptr_t) &OBJC_CLASS_$_XPF_NSVisualEffectView }
+    { "_DVTCurrentSystemVersionAvailabilityForm",  "DVTFoundation",     NULL, (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm },
+    { "_OBJC_CLASS_$_NSVisualEffectView",          "AppKit",            NULL, (uintptr_t) &OBJC_CLASS_$_XPF_NSVisualEffectView },
+    { "_posix_spawnattr_set_qos_class_np",         "libSystem.B.dylib", NULL, (uintptr_t) &xpf_posix_spawnattr_set_qos_class_np }
 
 };
 
