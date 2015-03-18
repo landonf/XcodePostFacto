@@ -139,6 +139,7 @@ static void xpf_add_image_callback (const struct mach_header *header, intptr_t v
             continue;
         
         name = _dyld_get_image_name(i);
+        break;
     }
 
     /* This would be odd ... */
