@@ -47,6 +47,14 @@ static void image_rewrite_bind_opcodes (const LocalImage &image);
 static void image_rebind_required_symbols (LocalImage &image, const rebind_entry table[], size_t table_len);
 static void image_rebind_required_symbols (LocalImage &image);
 
+/* Symbols to be marked as weak. */
+static const struct weak_entry {
+    const char *library;
+    const char *symbol;
+} weak_symbols[] = {
+    { "/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit", "_OBJC_CLASS_$_SCNParticlePropertyController" }
+};
+
 /**
  * Pre-main initialization (non-ObjC).
  */
@@ -163,6 +171,13 @@ static const char *xpf_image_state_change (enum dyld_image_states state, uint32_
  * symbols.
  */
 static void image_rewrite_bind_opcodes (const LocalImage &image) {
+    /* Cache the set of currently loaded images */
+    std::map<std::string, LocalImage> images;
+    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
+        const char *name = _dyld_get_image_name(i);
+        images.emplace(std::make_pair(name, LocalImage::Analyze(name, (const pl_mach_header_t *) _dyld_get_image_header(i))));
+    }
+
     /* Find the LINKEDIT segment; we need this to be able to reset memory protections
      * back to their original values. */
     const pl_segment_command_t *linkedit = nullptr;
@@ -196,60 +211,24 @@ static void image_rewrite_bind_opcodes (const LocalImage &image) {
         
         /* Check for an undefined symbol */
         auto check_def = [&](const bind_opstream::symbol_proc &sp) {
-
-            /*
-             * Ideally, we'd check for symbol availability and log missing symbols before flagging them as weak,
-             * but to do so, we need to be able to perform symbol lookups without recursively calling into dyld, e.g.,
-             * by writing our own export interpreter.
-             *
-             * As a stop-gap to aid in development, we could print a list of missing symbols by re-running our validation
-             * mechanism *after* all the images are loaded.
-             *
-             * There are good reasons to support this other than simplifying finding of weak symbols; for example,
-             * we could automatically rewrite missing classes and selectors to no-op implementations.
-             *
-             * For now, we just blindly make the universe weak. Weak, right? :-)
-             */
+            /* Skip any symbols not explicitly marked for weak rewriting */
+            bool found = false;
+            for (size_t i = 0; i < sizeof(weak_symbols) / sizeof(weak_symbols[0]); i++) {
+                if (strcmp(weak_symbols[i].symbol, sp.name().symbol().c_str()) != 0)
+                    continue;
+                
+                if (strcmp(weak_symbols[i].library, sp.name().image().c_str()) != 0)
+                    continue;
+                
+                found = true;
+                break;
+            }
+    
+            /* Mark the sumbol as weak if it's not already */
             if (!(sp.flags() & BIND_SYMBOL_FLAGS_WEAK_IMPORT)) {
                 /* Rewrite the symbol flags */
                 *((uint8_t *) symbol_decl_pc) = BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM | sp.flags() | BIND_SYMBOL_FLAGS_WEAK_IMPORT;
             }
-
-#if TODO_NEED_NONRECUSIVE_SYMBOL_LOOKUP_SUPPORT
-            /* Determine the appropriate handle to use for lookups, depending on whether this is a two-level or flat symbol reference. */
-            void *handle = RTLD_DEFAULT;
-            if (sp.name().image().length() != 0) {
-                /* Two-level image -- fetch a proper handle */
-                handle = dlopen(sp.name().image().c_str(), RTLD_LAZY|RTLD_FIRST);
-                if (handle == nullptr) {
-                    PMLog("Unexpected error opening library dependency: %s", dlerror());
-                    PMLog("Current image: %s", image.path().c_str());
-                    PMLog("Failed image: %s", sp.name().image().c_str());
-                    abort();
-                }
-            }
-            
-            /* Check for the symbol. If it doesn't exist -- and it's not already marked as weak -- we need to
-             * rewrite this symbol proc to use weak binding. */
-            const char *target_symbol = sp.name().symbol().c_str();
-            if (dlsym(handle, target_symbol+1 /* skip leading underscore */) == nullptr) {
-                PMLog("Warning -- missing symbol: %s:%s", sp.name().image().c_str(), sp.name().symbol().c_str());
-
-                /* We always warn -- it's useful for tracking down incompatibilities -- but we don't actually
-                 * need to patch symbols that are already marked as weak imports. */
-                if (!(sp.flags() & BIND_SYMBOL_FLAGS_WEAK_IMPORT)) {                    
-                    /* Rewrite the symbol flags */
-                    *((uint8_t *) symbol_decl_pc) = (
-                        BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM |
-                        (sp.flags() & BIND_SYMBOL_FLAGS_WEAK_IMPORT)
-                    );
-                }
-            }
-            
-            /* Clean up */
-            if (handle != RTLD_DEFAULT)
-                dlclose(handle);
-#endif
         };
     
         /* Step the VM, keeping track of symbol definition state so that we can rewrite
