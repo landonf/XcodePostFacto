@@ -206,13 +206,6 @@ static void image_insert_xcode_plugin_path () {
  * symbols.
  */
 static void image_rewrite_bind_opcodes (const LocalImage &image) {
-    /* Cache the set of currently loaded images */
-    std::map<std::string, LocalImage> images;
-    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
-        const char *name = _dyld_get_image_name(i);
-        images.emplace(std::make_pair(name, LocalImage::Analyze(name, (const pl_mach_header_t *) _dyld_get_image_header(i))));
-    }
-
     /* Find the LINKEDIT segment; we need this to be able to reset memory protections
      * back to their original values. */
     const pl_segment_command_t *linkedit = nullptr;
