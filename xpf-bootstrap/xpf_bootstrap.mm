@@ -243,10 +243,10 @@ static void image_rewrite_bind_opcodes (const LocalImage &image) {
             /* Skip any symbols not explicitly marked for weak rewriting */
             bool found = false;
             for (size_t i = 0; i < sizeof(weak_symbols) / sizeof(weak_symbols[0]); i++) {
-                if (strcmp(weak_symbols[i].symbol, sp.name().symbol().c_str()) != 0)
+                if (strcmp(weak_symbols[i].symbol, sp.name().symbol()) != 0)
                     continue;
                 
-                if (strcmp(weak_symbols[i].library, sp.name().image().c_str()) != 0)
+                if (strcmp(weak_symbols[i].library, sp.name().image()) != 0)
                     continue;
                 
                 found = true;
