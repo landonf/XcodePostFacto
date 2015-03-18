@@ -49,6 +49,31 @@ static NSString* sharedFrameworks[] = {
     @"SpriteKit.framework"
 };
 
+/* Replacement for LSCopyDefaultApplicationURLForURL */
+static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMask inRoleMask, CFErrorRef *outError) {
+    FSRef inRef;
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    /* CFURLGetFSRef() was deprecated in 10.9, but it's unclear what we're supposed to use instead */
+    if (!CFURLGetFSRef(inURL, &inRef)) {
+        if (outError != NULL)
+            *outError = (__bridge CFErrorRef)([NSError errorWithDomain: NSCocoaErrorDomain code: NSFileNoSuchFileError userInfo: nil]);
+        return NULL;
+    }
+#pragma clang diagnostic pop
+    
+    CFURLRef appURL;
+    OSStatus err = LSGetApplicationForItem(&inRef, inRoleMask, NULL, &appURL);
+    if (err != noErr) {
+        if (outError != NULL)
+            *outError = (__bridge CFErrorRef)([NSError errorWithDomain: NSOSStatusErrorDomain code: err userInfo: nil]);
+        return NULL;
+    }
+    
+    return appURL;
+}
+
 @implementation XcodePostFacto
 
 // from IDEInitialization protocol
@@ -66,6 +91,9 @@ static NSString* sharedFrameworks[] = {
             NSLog(@"Failed to load %@: %@", framework, error);
         }
     }
+    
+    /* Swap in our compatibility shims */
+    [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
     
     return YES;
 }
