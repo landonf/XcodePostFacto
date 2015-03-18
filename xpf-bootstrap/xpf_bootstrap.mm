@@ -37,18 +37,19 @@
 #import "DVTPlugInManager.h"
 #import "dyld_priv.h"
 #import <objc/runtime.h>
+#import <mach-o/getsect.h>
 
 using namespace patchmaster;
-using namespace xpf;
 
 static const char *xpf_image_state_change (enum dyld_image_states state, uint32_t infoCount, const struct dyld_image_info info[]);
 static void xpf_add_image_callback (const struct mach_header *header, intptr_t vm_slide);
 
 static void image_rewrite_bind_opcodes (const LocalImage &image);
-static void image_rebind_required_symbols (LocalImage &image, const rebind_entry table[], size_t table_len);
 static void image_rebind_required_symbols (LocalImage &image);
 static void image_insert_xcode_plugin_path ();
 
+/** Our own mach header */
+static const pl_mach_header_t *xpf_bootstrap_mh = nullptr;
 
 /* Symbols to be marked as weak. */
 static const struct weak_entry {
@@ -63,6 +64,14 @@ static const struct weak_entry {
  * Pre-main initialization (non-ObjC).
  */
 __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
+    /* Fetch a persistent reference to our image's mach header. */
+    Dl_info dli;
+    if (dladdr((const void *) &xpf_prelaunch_initializer, &dli) == 0) {
+        PMLog("Could not find our own image!");
+        abort();
+    }
+    xpf_bootstrap_mh = (const pl_mach_header_t *) dli.dli_fbase;
+    
     /* Register our state change callback */
     dyld_register_image_state_change_handler(dyld_image_state_rebased, true, xpf_image_state_change);
     
@@ -71,32 +80,30 @@ __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
 }
 
 /**
- * Given a bound -- but not yet initialized -- image, apply symbol rebindings required to bootstrap Xcode.
- *
- * Note that this function will provide incorrect original addresses if the image has not already been bound.
- *
- * @param image Image to rebind.
- */
-static void image_rebind_required_symbols (LocalImage &image) {
-    image_rebind_required_symbols(image, bootstrap_rebind_table, bootstrap_rebind_table_length);
-    image_rebind_required_symbols(image, cfbundle_rebind_table, cfbundle_rebind_table_length);
-}
-
-/**
- * Given a bound -- but not yet initialized -- image, apply symbol rebindings from @a table.
+ * Given a bound -- but not yet initialized -- image, apply symbol rebindings from the XPF_REBIND_SECTION.
  *
  * Note that this function will provide incorrect original addresses if the image has not already been bound.
  *
  * @param image Image to rebind.
  * @param table Rebind table to apply.
- * @param table_len Number of entries in @a table.
  */
-static void image_rebind_required_symbols (LocalImage &image, const rebind_entry table[], size_t table_len) {
+static void image_rebind_required_symbols (LocalImage &image) {
+    /* Fetch our rebind table, if any */
+    unsigned long rebind_table_size;
+    auto rebind_table = (const struct xpf_rebind_entry *) getsectiondata(xpf_bootstrap_mh, SEG_DATA, XPF_REBIND_SECTION, &rebind_table_size);
+    if (rebind_table == nullptr) {
+        PMLog("No rebind table found!");
+        return;
+    }
+    
+    /* Calculate the actual number of entries */
+    size_t rebind_table_len = rebind_table_size / sizeof(xpf_rebind_entry);
+    
     /* Loop over all symbol references in the image */
     image.rebind_symbols([&](const bind_opstream::symbol_proc &sp) {
         /* Iterate the bootstrap rebind table looking for a matching patch entry. */
-        for (size_t i = 0; i < table_len; i++) {
-            const rebind_entry &entry = table[i];
+        for (size_t i = 0; i < rebind_table_len; i++) {
+            const struct xpf_rebind_entry &entry = rebind_table[i];
 
             /* Check for a symbol match */
             if (!sp.name().match(SymbolName(entry.image, entry.symbol)))

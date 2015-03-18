@@ -28,14 +28,16 @@
 
 #include <string>
 #include <stdlib.h>
-#include <vector>
 
-namespace xpf {
+#include <mach-o/loader.h>
+
+/** __DATA section containing XPF rebind data */
+#define XPF_REBIND_SECTION "__xpf_rebind"
 
 /**
  * Rebind table entry.
  */
-struct rebind_entry {
+struct xpf_rebind_entry {
     /** Name of the symbol to rebind. */
     const char *symbol;
     
@@ -48,8 +50,26 @@ struct rebind_entry {
     /** Replacement symbol address */
     uintptr_t replacement;
 };
-    
-extern const rebind_entry bootstrap_rebind_table[];
-extern const size_t bootstrap_rebind_table_length;
 
-}
+/* Generate a compilation-unit-unique name for a single entry */
+#define _XPF_REBIND_ENTRY_NAME_1(_prefix, _counter) _prefix ## _counter
+#define _XPF_REBIND_ENTRY_NAME(_prefix, _counter) _XPF_REBIND_ENTRY_NAME_1(_prefix, _counter)
+
+/**
+ * Define an XPF rebind entry.
+ *
+ * @param _sym Original symbol name.
+ * @param _img Image exporting @a _sym, or an empty string to treat all references to @a _sym as if they were single-level bound.
+ * @param _orig If non-NULL, the location to store the original address. This value *must* be initialized to NULL, which is
+ * used as a sentinal to avoid updating the original value more than once.
+ * @param _replacement The new address to which all references to @a _sym will be bound.
+ */
+#define XPF_REBIND_ENTRY(_sym, _img, _orig, _replacement) \
+    __attribute__((used)) \
+    __attribute__((section(SEG_DATA ", " XPF_REBIND_SECTION))) \
+    static struct xpf_rebind_entry _XPF_REBIND_ENTRY_NAME(__xpf_rebind, __COUNTER__) = { \
+        .symbol = _sym, \
+        .image = _img, \
+        .original = _orig, \
+        .replacement = _replacement \
+    }

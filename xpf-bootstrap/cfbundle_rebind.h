@@ -27,11 +27,4 @@
  */
 
 #import <CoreFoundation/CoreFoundation.h>
-#import "rebind_table.h"
 
-namespace xpf {
-
-extern const rebind_entry cfbundle_rebind_table[];
-extern const size_t cfbundle_rebind_table_length;
-
-}

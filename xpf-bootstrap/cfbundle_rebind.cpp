@@ -27,6 +27,7 @@
  */
 
 #include "cfbundle_rebind.h"
+#import "rebind_table.h"
 
 namespace xpf {
 
@@ -37,7 +38,6 @@ namespace xpf {
  * We patch out the relevant CFBundle* APIs here, rewriting the LSMinimumSystemVersion
  * to 10.9.
  */
-
 static CFStringRef kLSMinimumSystemVersionKey = CFSTR("LSMinimumSystemVersion");
 static CFStringRef kSupportedSystemVersion = CFSTR("10.9");
 
@@ -64,33 +64,20 @@ static CFTypeRef xpf_CFBundleGetValueForInfoDictionaryKey (CFBundleRef bundle, C
 
     return kSupportedSystemVersion;
 }
-
+XPF_REBIND_ENTRY("_CFBundleGetValueForInfoDictionaryKey", "CoreFoundation", (void **) &orig_CFBundleGetValueForInfoDictionaryKey, (uintptr_t) &xpf_CFBundleGetValueForInfoDictionaryKey);
 
 /* Patch CFBundleGetInfoDictionary() */
 static CFDictionaryRef (*orig_CFBundleGetInfoDictionary) (CFBundleRef bundle);
 static CFDictionaryRef xpf_CFBundleGetInfoDictionary (CFBundleRef bundle) {
     return xpf_patch_info_dictionary(orig_CFBundleGetInfoDictionary(bundle));
 }
+XPF_REBIND_ENTRY("_CFBundleGetInfoDictionary", "CoreFoundation", (void **) &orig_CFBundleGetInfoDictionary, (uintptr_t) &xpf_CFBundleGetInfoDictionary);
 
 /* Patch CFBundleGetLocalInfoDictionary() */
 static CFDictionaryRef (*orig_CFBundleGetLocalInfoDictionary)(CFBundleRef bundle);
 static CFDictionaryRef xpf_CFBundleGetLocalInfoDictionary (CFBundleRef bundle) {
     return xpf_patch_info_dictionary(orig_CFBundleGetInfoDictionary(bundle));
 }
-
-
-/**
- * All CFBundle rebindings
- */
-const rebind_entry cfbundle_rebind_table[] = {
-    { "_CFBundleGetValueForInfoDictionaryKey",  "CoreFoundation",   (void **) &orig_CFBundleGetValueForInfoDictionaryKey,   (uintptr_t) &xpf_CFBundleGetValueForInfoDictionaryKey },
-    { "_CFBundleGetInfoDictionary",             "CoreFoundation",   (void **) &orig_CFBundleGetInfoDictionary,              (uintptr_t) &xpf_CFBundleGetInfoDictionary },
-    { "_CFBundleGetLocalInfoDictionary",        "CoreFoundation",   (void **) &orig_CFBundleGetLocalInfoDictionary,         (uintptr_t) &xpf_CFBundleGetLocalInfoDictionary },
-};
-
-/**
- * Length of the CFBundle rebind table.
- */
-const size_t cfbundle_rebind_table_length = sizeof(cfbundle_rebind_table) / sizeof(cfbundle_rebind_table[0]);
+XPF_REBIND_ENTRY("_CFBundleGetLocalInfoDictionary", "CoreFoundation", (void **) &orig_CFBundleGetLocalInfoDictionary, (uintptr_t) &xpf_CFBundleGetLocalInfoDictionary);
 
 }
