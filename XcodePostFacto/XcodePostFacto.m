@@ -34,16 +34,8 @@
 #import "XPFLog.h"
 #import <dlfcn.h>
 
-// from DVTFoundation -- partial API
-@interface DVTVersion : NSObject <NSCopying>
-+ (id)currentSystemVersion;
-+ (id)versionWithStringValue:(id)arg1;
-+ (id)versionWithStringValue:(id)arg1 buildNumber:(id)arg2;
-@property(readonly, copy) NSString *stringValue;
-@end
-
 /* Replacement frameworks bundled with Xcode that are required for Mavericks */
-static NSString* sharedFrameworks[] = {
+static NSString *sharedFrameworks[] = {
     @"SceneKit.framework",
     @"PhysicsKit.framework",
     @"SpriteKit.framework"
@@ -88,10 +80,32 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
         NSString *path = [[[NSBundle mainBundle] sharedFrameworksPath] stringByAppendingPathComponent: framework];
         
         if (![[NSBundle bundleWithPath: path] loadAndReturnError: &error]) {
-            NSLog(@"Failed to load %@: %@", framework, error);
+            XPFLog(@"Failed to load %@: %@", framework, error);
         }
     }
     
+    /* Likewise, we need to disable IB stand-in for which runtime classes are not available on Mavericks. */
+    [[PLPatchMaster master] patchInstancesWithFutureClassName: @"IBCocoaPlatform" selector: @selector(standinIBNSClasses) replacementBlock: ^(PLPatchIMP *imp) {
+        /* Fetch the default set */
+        NSSet *standInClasses = PLPatchIMPFoward(imp, NSSet *(*)(id, SEL));
+        
+        /* Clear out unsupported classes */
+        NSMutableSet *result = [NSMutableSet set];
+        for (Class cls in standInClasses) {
+            NSString *className = NSStringFromClass(cls);
+            assert([className hasPrefix: @"IB"]);
+            NSString *runtimeClassName = [className substringFromIndex: 2];
+
+            if (NSClassFromString(runtimeClassName)) {
+                [result addObject: cls];
+            } else {
+                XPFLog(@"Disabling IB stand-in class %@ (can't find runtime class)", className);
+            }
+        }
+        
+        return result;
+    }];
+
     /* Swap in our compatibility shims */
     [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
     
