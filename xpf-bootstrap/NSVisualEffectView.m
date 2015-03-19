@@ -33,7 +33,7 @@
 @property NSUInteger interiorBackgroundStyle;
 @property NSInteger blendingMode;
 @property NSInteger state;
-@property NSImage *maskImage;
+@property(retain) NSImage *maskImage;
 @end
 
 @implementation XPF_NSVisualEffectView

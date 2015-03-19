@@ -15,6 +15,7 @@
 		05C258AE1AB8202F007DD20C /* XcodePostFacto.ideplugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05C258B31AB8A667007DD20C /* cfbundle_rebind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */; };
 		05C258B41AB8A667007DD20C /* cfbundle_rebind.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C258B21AB8A667007DD20C /* cfbundle_rebind.h */; };
+		05CD7F911ABA849400169305 /* XPFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CD7F901ABA849400169305 /* XPFViewController.m */; };
 		05EEA0BC1AB7B3A6000C8B89 /* xpf_bootstrap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */; };
 		05EEA0BD1AB7B3B3000C8B89 /* PLPatchMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; };
 		05EEA0BF1AB7B3C3000C8B89 /* PLPatchMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -85,6 +86,7 @@
 		05C258AF1AB89EED007DD20C /* DVTPlugInManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTPlugInManager.h; sourceTree = "<group>"; };
 		05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cfbundle_rebind.cpp; sourceTree = "<group>"; };
 		05C258B21AB8A667007DD20C /* cfbundle_rebind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cfbundle_rebind.h; sourceTree = "<group>"; };
+		05CD7F901ABA849400169305 /* XPFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPFViewController.m; sourceTree = "<group>"; };
 		05EEA0831AB7AA21000C8B89 /* xpf_bootstrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpf_bootstrap.h; sourceTree = "<group>"; };
 		05EEA0851AB7AA21000C8B89 /* xpf_bootstrap.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = xpf_bootstrap.mm; sourceTree = "<group>"; };
 		05EEA08B1AB7AA22000C8B89 /* xpf-bootstrapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xpf-bootstrapTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +157,7 @@
 				05B0264E1AB4E1D000F6BF2B /* XPFDebugMenu.h */,
 				05B0264F1AB4E1D000F6BF2B /* XPFDebugMenu.m */,
 				05B026511AB4E30B00F6BF2B /* XPFLog.h */,
+				05CD7F8F1ABA846B00169305 /* Yosemite Compat */,
 				05B026451AB4E14C00F6BF2B /* Supporting Files */,
 			);
 			path = XcodePostFacto;
@@ -187,6 +190,14 @@
 			name = "Xcode API";
 			sourceTree = "<group>";
 		};
+		05CD7F8F1ABA846B00169305 /* Yosemite Compat */ = {
+			isa = PBXGroup;
+			children = (
+				05CD7F901ABA849400169305 /* XPFViewController.m */,
+			);
+			name = "Yosemite Compat";
+			sourceTree = "<group>";
+		};
 		05EEA0821AB7AA21000C8B89 /* xpf-bootstrap */ = {
 			isa = PBXGroup;
 			children = (
@@ -197,7 +208,7 @@
 				05C258B21AB8A667007DD20C /* cfbundle_rebind.h */,
 				05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */,
 				05C258B01AB89EF2007DD20C /* Xcode API */,
-				05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */,
+				05EEA0D81AB80CE9000C8B89 /* Yosemite Bootstrap Compat */,
 				05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */,
 				05EEA0A51AB7B354000C8B89 /* Supporting Files */,
 			);
@@ -228,14 +239,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */ = {
+		05EEA0D81AB80CE9000C8B89 /* Yosemite Bootstrap Compat */ = {
 			isa = PBXGroup;
 			children = (
 				05EEA0D51AB7F028000C8B89 /* yosemite_objc_stubs.h */,
 				05EEA0D41AB7F028000C8B89 /* yosemite_objc_stubs.m */,
 				05EEA0D91AB80D1C000C8B89 /* NSVisualEffectView.m */,
 			);
-			name = "Yosemite Compat";
+			name = "Yosemite Bootstrap Compat";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -381,6 +392,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05CD7F911ABA849400169305 /* XPFViewController.m in Sources */,
 				05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */,
 				05B026501AB4E1D000F6BF2B /* XPFDebugMenu.m in Sources */,
 			);
@@ -423,7 +435,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -470,7 +482,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;

@@ -33,7 +33,7 @@
  */
 typedef struct PLPatchIMP {
     /** The original message target. */
-    void *self;
+    id self;
     
     /** The original IMP (eg, the IMP prior to patching) */
     IMP origIMP;
