@@ -20,7 +20,8 @@ Contribution of a wrapping launch application would be most appreciated, especia
 
 ## Status
 
-The code has seen limited local testing, but Xcode 6.3-beta3 launches and is operable; until the code has stabilized, I expect to find and fix issues during day-to-day use of Xcode.
+XcodePostFacto is fully self-hosting, and is being used for full-time Mac development work. However,
+issues certainly still remain, and I expect to find and fix issues during day-to-day use of Xcode.
 
 ## How
 
