@@ -78,9 +78,14 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
     for (size_t i = 0; i < sizeof(sharedFrameworks) / sizeof(sharedFrameworks[0]); i++) {
         NSString *framework = sharedFrameworks[i];
         NSString *path = [[[NSBundle mainBundle] sharedFrameworksPath] stringByAppendingPathComponent: framework];
+        NSBundle *bundle = [NSBundle bundleWithPath: path];
         
-        if (![[NSBundle bundleWithPath: path] loadAndReturnError: &error]) {
-            XPFLog(@"Failed to load %@: %@", framework, error);
+        if (bundle) {
+            if (!([bundle loadAndReturnError: &error])) {
+                XPFLog(@"Failed to load %@: %@", framework, error);
+            }
+        } else {
+            XPFLog(@"Framework %@ not found", framework);
         }
     }
     
