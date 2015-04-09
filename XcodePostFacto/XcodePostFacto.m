@@ -77,7 +77,7 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
     XPFLog(@"Initializing Mavericks shared frameworks");
     for (size_t i = 0; i < sizeof(sharedFrameworks) / sizeof(sharedFrameworks[0]); i++) {
         NSString *framework = sharedFrameworks[i];
-        NSString *path = [[[NSBundle mainBundle] sharedFrameworksPath] stringByAppendingPathComponent: framework];
+        NSString *path = [[[NSBundle bundleWithIdentifier: @"com.apple.dt.Xcode"] sharedFrameworksPath] stringByAppendingPathComponent: framework];
         NSBundle *bundle = [NSBundle bundleWithPath: path];
         
         if (bundle) {
