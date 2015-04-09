@@ -137,7 +137,10 @@
 				05EEA08F1AB7AA22000C8B89 /* xpf-bootstrapTests */,
 				05B026431AB4E14C00F6BF2B /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 0;
 		};
 		05B026431AB4E14C00F6BF2B /* Products */ = {
 			isa = PBXGroup;
