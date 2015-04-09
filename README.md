@@ -14,7 +14,7 @@ Plus, I don't like being told what to do :-)
 
 After building the `xpf-bootstrap.framework`, Xcode can be launched from the command-line:
 
-    env DYLD_INSERT_LIBRARIES=$ABSOLUTE_PATH_TO_FRAMEWORK/xpf-bootstrap.framework/xpf-bootstrap /Applications/Xcode-beta.app/Contents/MacOS/Xcode
+    env DYLD_INSERT_LIBRARIES=$ABSOLUTE_PATH_TO_FRAMEWORK/xpf-bootstrap.framework/xpf-bootstrap /Applications/Xcode.app/Contents/MacOS/Xcode
 
 Contribution of a wrapping launch application would be most appreciated, especially one that supports drag-and-drop of the Xcode binary to create a new launcher :-)
 
