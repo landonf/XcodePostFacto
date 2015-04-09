@@ -26,6 +26,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#ifdef __OBJC__
 
+#import <Foundation/Foundation.h>
 #define XPFLog(fmt, ...) NSLog(@"[XcodePostFacto] %@", [NSString stringWithFormat: fmt, ##__VA_ARGS__])
+#else
+
+#import <stdio.h>
+#define XPFLog(fmt, ...) fprintf(stderr, "[XcodePostFacto] " fmt "\n", ##__VA_ARGS__)
+
+#endif
