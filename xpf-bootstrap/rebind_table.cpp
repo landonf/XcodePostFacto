@@ -50,8 +50,10 @@ XPF_REBIND_ENTRY("_DVTCurrentSystemVersionAvailabilityForm", "DVTFoundation", NU
  * NSVisualEffectView is used on Yosemite to produce the ugly blended translucency views. We provide a simple
  * no-op replacement.
  */
+#if !defined(__i386__) || IPHONE_OS_TARGET
 extern "C" void *OBJC_CLASS_$_XPF_NSVisualEffectView;
 XPF_REBIND_ENTRY("_OBJC_CLASS_$_NSVisualEffectView", "AppKit", NULL, (uintptr_t) &OBJC_CLASS_$_XPF_NSVisualEffectView);
+#endif
 
 /*
  * Yosemite provides QoS extensions to posix_spawn() -- we can simply no-op the implementation.

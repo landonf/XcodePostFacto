@@ -28,7 +28,13 @@
 
 #import <AppKit/AppKit.h>
 
-@interface XPF_NSVisualEffectView : NSView
+@interface XPF_NSVisualEffectView : NSView {
+    NSUInteger _material;
+    NSUInteger _interiorBackgroundStyle;
+    NSInteger _blendingMode;
+    NSInteger _state;
+    NSImage *_maskImage;
+}
 @property NSUInteger material;
 @property NSUInteger interiorBackgroundStyle;
 @property NSInteger blendingMode;
@@ -37,5 +43,11 @@
 @end
 
 @implementation XPF_NSVisualEffectView
+
+@synthesize material = _material;
+@synthesize interiorBackgroundStyle = _interiorBackgroundStyle;
+@synthesize blendingMode = _blendingMode;
+@synthesize state = _state;
+@synthesize maskImage = _maskImage;
 
 @end
