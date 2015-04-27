@@ -1,7 +1,7 @@
 /*
  * Author: Landon Fuller <landonf@plausiblelabs.com>
  *
- * Copyright (c) 2013 Plausible Labs Cooperative, Inc.
+ * Copyright (c) 2013-2015 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -27,13 +27,14 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSObject+PLPatchMaster.h"
 
 /**
  * IMP patch state, as passed to a replacement block.
  */
 typedef struct PLPatchIMP {
     /** The original message target. */
-    id self;
+    void *self;
     
     /** The original IMP (eg, the IMP prior to patching) */
     IMP origIMP;
@@ -58,17 +59,11 @@ typedef struct PLPatchIMP {
  */
 #define PLPatchGetSelf(patch) ((__bridge id) patch->self)
 
-@interface NSObject (PLPatchMaster)
+@class PLPatchMasterImpl;
 
-+ (BOOL) pl_patchSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
-+ (BOOL) pl_patchInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
-
-+ (void) pl_patchFutureSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
-+ (void) pl_patchFutureInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
-
-@end
-
-@interface PLPatchMaster : NSObject
+@interface PLPatchMaster : NSObject {
+    PLPatchMasterImpl *_impl;
+}
 
 + (instancetype) master;
 
