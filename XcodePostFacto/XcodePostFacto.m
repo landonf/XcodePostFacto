@@ -30,6 +30,8 @@
 #import <AppKit/AppKit.h>
 #import <PLPatchMaster/PLPatchMaster.h>
 
+#import <objc/message.h>
+
 #import "XcodePostFacto.h"
 #import "XPFLog.h"
 #import <dlfcn.h>
@@ -110,9 +112,17 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
         
         return result;
     }];
+    
+    /* Shim Yosemite-only PackageKit API */
+    [[PLPatchMaster master] patchInstancesWithFutureClassName: @"PKInstallClient" selector: @selector(initWithRequest:delegate:options:error:) replacementBlock: ^(PLPatchIMP *imp, id request, id delegate, uint32_t options, NSError **error)
+    {
+        id self = PLPatchGetSelf(imp);
+        
+        return (((id (*) (id, SEL, id, id, NSError **)) objc_msgSend))(self, @selector(initWithRequest:delegate:error:), request, delegate, error);
+    }];
 
     /* Swap in our compatibility shims */
-    [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
+    [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
     
     return YES;
 }
