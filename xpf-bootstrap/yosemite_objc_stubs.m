@@ -53,6 +53,10 @@ FACADE(NSOperationQueue)
 - (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
 @end
 
+FACADE(NSThread)
+- (NSQualityOfService) qualityOfService {return NSQualityOfServiceDefault; }
+- (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
+@end
 
 FACADE(NSOperation)
 - (NSQualityOfService) qualityOfService {return NSQualityOfServiceDefault; }
