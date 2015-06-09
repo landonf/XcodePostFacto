@@ -72,6 +72,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		052BA4481B276C0600058702 /* DVTPlugInScanRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTPlugInScanRecord.h; sourceTree = "<group>"; };
 		05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcodePostFacto.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B026461AB4E14C00F6BF2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XcodePostFacto.xcplugindata; sourceTree = "<group>"; };
@@ -189,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				05C258AF1AB89EED007DD20C /* DVTPlugInManager.h */,
+				052BA4481B276C0600058702 /* DVTPlugInScanRecord.h */,
 			);
 			name = "Xcode API";
 			sourceTree = "<group>";
