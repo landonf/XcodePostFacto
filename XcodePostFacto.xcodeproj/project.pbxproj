@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		059723191B27812900662B9C /* PackageKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 059723181B27812900662B9C /* PackageKit.framework */; };
+		0597231C1B27815400662B9C /* PKInstallClient+XPF.m in Sources */ = {isa = PBXBuildFile; fileRef = 0597231B1B27815400662B9C /* PKInstallClient+XPF.m */; };
 		05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */; };
 		05B026501AB4E1D000F6BF2B /* XPFDebugMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B0264F1AB4E1D000F6BF2B /* XPFDebugMenu.m */; };
 		05B026BA1AB4F64F00F6BF2B /* PLPatchMaster.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -73,6 +75,8 @@
 
 /* Begin PBXFileReference section */
 		052BA4481B276C0600058702 /* DVTPlugInScanRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTPlugInScanRecord.h; sourceTree = "<group>"; };
+		059723181B27812900662B9C /* PackageKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PackageKit.framework; path = /System/Library/PrivateFrameworks/PackageKit.framework; sourceTree = "<absolute>"; };
+		0597231B1B27815400662B9C /* PKInstallClient+XPF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKInstallClient+XPF.m"; sourceTree = "<group>"; };
 		05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcodePostFacto.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B026461AB4E14C00F6BF2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XcodePostFacto.xcplugindata; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				059723191B27812900662B9C /* PackageKit.framework in Frameworks */,
 				05B026BB1AB4F65300F6BF2B /* PLPatchMaster.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,6 +184,7 @@
 		05B026521AB4EA7B00F6BF2B /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				059723181B27812900662B9C /* PackageKit.framework */,
 				05B026A51AB4EA7B00F6BF2B /* PLPatchMaster.framework */,
 				05B026A61AB4EA7B00F6BF2B /* PLPatchMaster.framework.dSYM */,
 				05B026A71AB4EA7B00F6BF2B /* README.txt */,
@@ -199,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				05CD7F901ABA849400169305 /* XPFViewController.m */,
+				0597231B1B27815400662B9C /* PKInstallClient+XPF.m */,
 			);
 			name = "Yosemite Compat";
 			sourceTree = "<group>";
@@ -399,6 +406,7 @@
 			files = (
 				05CD7F911ABA849400169305 /* XPFViewController.m in Sources */,
 				05B026BE1AB4F68300F6BF2B /* XcodePostFacto.m in Sources */,
+				0597231C1B27815400662B9C /* PKInstallClient+XPF.m in Sources */,
 				05B026501AB4E1D000F6BF2B /* XPFDebugMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -529,6 +537,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Dependencies",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
 				INFOPLIST_FILE = XcodePostFacto/Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Developer/Xcode/Plug-ins";
@@ -546,6 +555,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Dependencies",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
 				INFOPLIST_FILE = XcodePostFacto/Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Developer/Xcode/Plug-ins";
