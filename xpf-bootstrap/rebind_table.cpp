@@ -33,7 +33,6 @@
 #include <sys/qos.h>
 #include <dispatch/dispatch.h>
 #include <Block.h>
-#include <CoreFoundation/CoreFoundation.h>
 
 namespace xpf {
 
@@ -46,16 +45,6 @@ namespace xpf {
  */
 static unsigned int Yosemite_DVTCurrentSystemVersionAvailabilityForm () { return 101000; }
 XPF_REBIND_ENTRY("_DVTCurrentSystemVersionAvailabilityForm", "DVTFoundation", NULL, (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm);
-
-static CFDictionaryRef Yosemite__CFCopySystemVersionDictionary () {
-    CFMutableDictionaryRef result = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-    
-    CFDictionarySetValue(result, CFSTR("ProductVersion"), CFSTR("10.10.0"));
-    CFDictionarySetValue(result, CFSTR("ProductBuildVersion"), CFSTR("14A389"));
-
-    return result;
-}
-XPF_REBIND_ENTRY("__CFCopySystemVersionDictionary", "CoreFoundation", nullptr, (uintptr_t) &Yosemite__CFCopySystemVersionDictionary);
 
 /*
  * NSVisualEffectView is used on Yosemite to produce the ugly blended translucency views. We provide a simple
