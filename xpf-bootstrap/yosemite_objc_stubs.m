@@ -27,8 +27,6 @@
  */
 
 #import <AppKit/AppKit.h>
-#import <objc/runtime.h>
-
 #import "yosemite_objc_stubs.h"
 
 /*
@@ -55,21 +53,6 @@ FACADE(NSOperationQueue)
 - (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
 @end
 
-FACADE(NSThread)
-
-static int XPF_NSThread_QOS = 0;
-- (NSQualityOfService) qualityOfService {
-    NSNumber *qos = objc_getAssociatedObject(self, &XPF_NSThread_QOS);
-    if (qos == nil)
-        return NSQualityOfServiceDefault;
-
-    return (NSQualityOfService) [qos unsignedLongLongValue];
-}
-- (void) setQualityOfService:(NSQualityOfService)qualityOfService {
-    objc_setAssociatedObject(self, &XPF_NSThread_QOS, @(qualityOfService), OBJC_ASSOCIATION_RETAIN);
-}
-
-@end
 
 FACADE(NSOperation)
 - (NSQualityOfService) qualityOfService {return NSQualityOfServiceDefault; }

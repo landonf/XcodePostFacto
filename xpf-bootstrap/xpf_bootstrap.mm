@@ -35,8 +35,6 @@
 #import "XPFLog.h"
 
 #import "DVTPlugInManager.h"
-#import "DVTPlugInScanRecord.h"
-
 #import "dyld_priv.h"
 #import <objc/runtime.h>
 #import <mach-o/getsect.h>
@@ -48,7 +46,7 @@ static void xpf_add_image_callback (const struct mach_header *header, intptr_t v
 
 static void image_rewrite_bind_opcodes (const LocalImage &image);
 static void image_rebind_required_symbols (LocalImage &image);
-static void image_insert_xcode_plugin_patches ();
+static void image_insert_xcode_plugin_path ();
 
 /** Our own mach header */
 static const pl_mach_header_t *xpf_bootstrap_mh = nullptr;
@@ -61,13 +59,6 @@ static const struct weak_entry {
     { "/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit", "_OBJC_CLASS_$_SCNParticlePropertyController" },
     { "/usr/lib/libSystem.B.dylib", "_posix_spawnattr_set_qos_class_np" }
 };
-
-/** XPF Bundle Identifier */
-static NSString *XPF_BUNDLE_ID = @"org.landonf.xpf-bootstrap";
-
-/** XCF Bundle Identifier */
-static NSString *XCF_BUNDLE_ID = @"org.landonf.XcodePostFacto";
-
 
 /**
  * Pre-main initialization (non-ObjC).
@@ -167,99 +158,54 @@ static void xpf_add_image_callback (const struct mach_header *header, intptr_t v
     auto image = LocalImage::Analyze(name, (const pl_mach_header_t *) header);
     image_rebind_required_symbols(image);
     
-    /* Apply ObjC patches to any existing loaded images. */
-    image_insert_xcode_plugin_patches();
+    /* Apply ObjC patch to any existing loaded images. */
+    image_insert_xcode_plugin_path();
 }
 
 
 /*
- * These are the only Objective-C patches that /must/ be applied early on at the bootstrap level
+ * This is the only Objective-C patch that /must/ be applied early on at the bootstrap level -- we swizzle DVTPlugInManager,
+ * appending our embedded Xcode developer directory to the default path list; this ensures
+ * that our embedded Xcode plugin gets picked up at IDEInitialization time. 
  */
-
-/* Append our embedded Xcode developer directory to DVTPlugInManager's path list; this ensures
- * that our embedded Xcode plugin gets picked up at IDEInitialization time. */
 static id (*orig_DVTPlugInManager_init) (DVTPlugInManager *self, SEL _cmd);
 static id xpf_DVTPlugInManager_init (DVTPlugInManager *self, SEL _cmd) {
     if ((self = orig_DVTPlugInManager_init(self, _cmd)) == nil)
         return nil;
     
-    NSBundle *bundle = [NSBundle bundleWithIdentifier: XPF_BUNDLE_ID];
+    NSBundle *bundle = [NSBundle bundleWithIdentifier: @"org.landonf.xpf-bootstrap"];
     NSString *embeddedDevDir = [[bundle resourcePath] stringByAppendingPathComponent: @"Xcode"];
     [self.mutableSearchPaths addObject: embeddedDevDir];
     
     return self;
 }
 
-/*
- * Always return the current host plugin UUID from -[DVTPlugInScanRecord plugInCompatibilityUUIDs] when
- * operating on our Xcode plugin: chances are good the plugin works across minor Xcode updates, and it's
- * not like this is remotely supported operation anyway.
- */
-static NSSet *(*orig_DVTPlugInScanRecord_plugInCompatibilityUUIDs) (DVTPlugInScanRecord *self, SEL _cmd);
-static NSSet *xpf_DVTPlugInScanRecord_plugInCompatibilityUUIDs (DVTPlugInScanRecord *self, SEL _cmd) {
-    if (![[self identifier] isEqualTo: XCF_BUNDLE_ID]) {
-        return orig_DVTPlugInScanRecord_plugInCompatibilityUUIDs(self, _cmd);
-    }
-    
-    NSUUID *pluginHostUUID = [[objc_getClass("DVTPlugInManager") defaultPlugInManager] plugInHostUUID];
-    return [orig_DVTPlugInScanRecord_plugInCompatibilityUUIDs(self, _cmd) setByAddingObject: pluginHostUUID];
-}
-
-/*
- * Return 'YES' in -[DVTPlugInScanRecord isApplePlugIn] for our plugin. This disables Xcode's "are you sure
- * you want to load a third party plugin" behavior.
- *
- * In the case of XcodePostFacto, there's no point to Xcode's check -- if our plugin isn't loaded, then
- * the best case scenario is a crash.
- */
-static BOOL (*orig_DVTPlugInScanRecord_isApplePlugIn) (DVTPlugInScanRecord *self, SEL _cmd);
-static BOOL xpf_DVTPlugInScanRecord_isApplePlugIn (DVTPlugInScanRecord *self, SEL _cmd) {
-    if (![[self identifier] isEqualTo: XCF_BUNDLE_ID])
-        return orig_DVTPlugInScanRecord_isApplePlugIn(self, _cmd);
-    
-    return YES;
-}
-
 /**
- * Swizzle an instance method in @a target_class.
- *
- * @param target_class The name of the target class.
- * @param target_sel The method selector to be swizzled.
- * @param orig_imp The location to which the existing method implementation pointer will be saved.
- * @param new_imp The new method implementation pointer.
+ * Called upon image load to perform swizzling of DVTPlugInManager, if necessary.
  */
-static void image_swizzle_imethod (const char *target_class, SEL target_sel, IMP *orig_imp, IMP new_imp) {
+static void image_insert_xcode_plugin_path () {
     /* Already patched */
-    if (*orig_imp != nullptr)
+    if (orig_DVTPlugInManager_init != nullptr)
         return;
     
     /* Check for the class. */
-    Class cls = objc_getClass(target_class);
+    Class cls = objc_getClass("DVTPlugInManager");
     if (cls == nil)
         return;
     
     /* If available, perform the swap */
-    Method m = class_getInstanceMethod(cls, target_sel);
+    Method m = class_getInstanceMethod(cls, @selector(init));
     if (m == NULL)
         return;
 
     /* Save the old implementation, insert the new. */
-    *orig_imp = method_getImplementation(m);
+    orig_DVTPlugInManager_init = (decltype(orig_DVTPlugInManager_init)) method_getImplementation(m);
+    IMP newIMP = (IMP) xpf_DVTPlugInManager_init;
     
-    if (!class_addMethod(cls, target_sel, (IMP) new_imp, method_getTypeEncoding(m))) {
+    if (!class_addMethod(cls, @selector(init), newIMP, method_getTypeEncoding(m))) {
         /* Method already exists in subclass, we just need to swap the IMP */
-        method_setImplementation(m, new_imp);
+        method_setImplementation(m, newIMP);
     }
-}
-
-
-/**
- * Called upon image load to apply any Objective-C patches, if necessary.
- */
-static void image_insert_xcode_plugin_patches (void) {
-    image_swizzle_imethod("DVTPlugInManager", @selector(init), (IMP *) &orig_DVTPlugInManager_init, (IMP) xpf_DVTPlugInManager_init);
-    image_swizzle_imethod("DVTPlugInScanRecord", @selector(plugInCompatibilityUUIDs), (IMP *) &orig_DVTPlugInScanRecord_plugInCompatibilityUUIDs, (IMP) xpf_DVTPlugInScanRecord_plugInCompatibilityUUIDs);
-    image_swizzle_imethod("DVTPlugInScanRecord", @selector(isApplePlugIn), (IMP *) &orig_DVTPlugInScanRecord_isApplePlugIn, (IMP) xpf_DVTPlugInScanRecord_isApplePlugIn);
 }
 
 

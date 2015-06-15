@@ -30,8 +30,6 @@
 #import "rebind_table.h"
 
 namespace xpf {
-    
-#define XPF_CF_PATH "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation"
 
 /*
  * HIServices checks for a LSMinimumSystemVersion in the application bundle, and
@@ -66,20 +64,20 @@ static CFTypeRef xpf_CFBundleGetValueForInfoDictionaryKey (CFBundleRef bundle, C
 
     return kSupportedSystemVersion;
 }
-XPF_REBIND_ENTRY("_CFBundleGetValueForInfoDictionaryKey", XPF_CF_PATH, (void **) &orig_CFBundleGetValueForInfoDictionaryKey, (uintptr_t) &xpf_CFBundleGetValueForInfoDictionaryKey);
+XPF_REBIND_ENTRY("_CFBundleGetValueForInfoDictionaryKey", "CoreFoundation", (void **) &orig_CFBundleGetValueForInfoDictionaryKey, (uintptr_t) &xpf_CFBundleGetValueForInfoDictionaryKey);
 
 /* Patch CFBundleGetInfoDictionary() */
 static CFDictionaryRef (*orig_CFBundleGetInfoDictionary) (CFBundleRef bundle);
 static CFDictionaryRef xpf_CFBundleGetInfoDictionary (CFBundleRef bundle) {
     return xpf_patch_info_dictionary(orig_CFBundleGetInfoDictionary(bundle));
 }
-XPF_REBIND_ENTRY("_CFBundleGetInfoDictionary", XPF_CF_PATH, (void **) &orig_CFBundleGetInfoDictionary, (uintptr_t) &xpf_CFBundleGetInfoDictionary);
+XPF_REBIND_ENTRY("_CFBundleGetInfoDictionary", "CoreFoundation", (void **) &orig_CFBundleGetInfoDictionary, (uintptr_t) &xpf_CFBundleGetInfoDictionary);
 
 /* Patch CFBundleGetLocalInfoDictionary() */
 static CFDictionaryRef (*orig_CFBundleGetLocalInfoDictionary)(CFBundleRef bundle);
 static CFDictionaryRef xpf_CFBundleGetLocalInfoDictionary (CFBundleRef bundle) {
     return xpf_patch_info_dictionary(orig_CFBundleGetInfoDictionary(bundle));
 }
-XPF_REBIND_ENTRY("_CFBundleGetLocalInfoDictionary", XPF_CF_PATH, (void **) &orig_CFBundleGetLocalInfoDictionary, (uintptr_t) &xpf_CFBundleGetLocalInfoDictionary);
+XPF_REBIND_ENTRY("_CFBundleGetLocalInfoDictionary", "CoreFoundation", (void **) &orig_CFBundleGetLocalInfoDictionary, (uintptr_t) &xpf_CFBundleGetLocalInfoDictionary);
 
 }

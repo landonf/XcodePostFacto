@@ -30,8 +30,6 @@
 #import <AppKit/AppKit.h>
 #import <PLPatchMaster/PLPatchMaster.h>
 
-#import <objc/message.h>
-
 #import "XcodePostFacto.h"
 #import "XPFLog.h"
 #import <dlfcn.h>
@@ -114,7 +112,7 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
     }];
 
     /* Swap in our compatibility shims */
-    [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
+    [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
     
     return YES;
 }
