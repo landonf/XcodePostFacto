@@ -70,6 +70,14 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
 
 @implementation XcodePostFacto
 
++ (void) load {
+    /* As a stop-gap until we support system-wide patching (in which case, we can patch installd et al), we need
+     * to disable installation of unsupported package formats (refer to BOMCopier for details on how these will be supported). */
+    [[PLPatchMaster master] patchInstancesWithFutureClassName: @"DVTFirstLaunchPackageInstallationHelper" selector: @selector(packagesToInstall) replacementBlock: ^(PLPatchIMP *imp) {
+        return [NSArray array];
+    }];
+}
+
 // from IDEInitialization protocol
 + (BOOL) ide_initializeWithOptions: (int) flags error: (NSError **) arg2 {
     NSError *error;
