@@ -124,6 +124,10 @@ static CFURLRef xpf_LSCopyDefaultApplicationURLForURL (CFURLRef inURL, LSRolesMa
     /* Swap in our compatibility shims */
     [[PLPatchMaster master] rebindSymbol: @"_LSCopyDefaultApplicationURLForURL" fromImage: @"/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices" replacementAddress: (uintptr_t) &xpf_LSCopyDefaultApplicationURLForURL];
     
+    /* Hack in accessibility shims */
+    [[PLPatchMaster master] patchInstancesWithFutureClassName: @"DVTSegmentedControl" selector: @selector(dvt_setAccessibilityDescription:forSegment:) replacementBlock: ^(PLPatchIMP *imp, id description, NSUInteger segment) {
+    }];
+    
     return YES;
 }
 

@@ -28,6 +28,7 @@
 
 #import <AppKit/AppKit.h>
 #import <objc/runtime.h>
+#import <CoreData/CoreData.h>
 
 #import "yosemite_objc_stubs.h"
 
@@ -41,6 +42,70 @@
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 #define FACADE(_cls) @interface _cls (XPFYosemiteFacade) @end @implementation _cls (XPFYosemiteFacade)
+
+FACADE(NSPersistentStoreCoordinator)
+// XXX - We really need to fetch the real queue from the persistent store coordinator and dispatch
+// on that
+- (void) performBlock:(void (^)())block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self lock];
+        block();
+        [self unlock];
+    });
+}
+
+- (void) performBlockAndWait:(void (^)())block {
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self lock];
+        block();
+        [self unlock];
+    });
+}
+@end
+
+FACADE(NSXPCConnection)
+- (xpc_connection_t) _xpcConnection {
+    xpc_connection_t conn;
+    object_getInstanceVariable(self, "_xconnection", (void **) &conn);
+    return conn;
+}
+@end
+
+FACADE(NSString)
+- (BOOL) localizedCaseInsensitiveContainsString:(NSString *)aString {
+    return [self rangeOfString: aString options:NSCaseInsensitiveSearch range: NSMakeRange(0, self.length) locale: [NSLocale currentLocale]].location != NSNotFound;
+}
+@end
+
+FACADE(NSCell)
+- (void) setAccessibilityTitleUIElement:(id)accessibilityTitleUIElement { }
+- (void) setAccessibilityChildren:(NSArray *)accessibilityChildren { }
+- (void) setAccessibilityRoleDescription:(NSString *)accessibilityRoleDescription { }
+- (void) setAccessibilityRole:(NSString *)accessibilityRole { }
+- (void) setAccessibilityParent:(id)accessibilityParent { }
+- (void) setAccessibilityIdentifier:(NSString *)accessibilityIdentifier { }
+- (void) setAccessibilityTitle:(NSString *)accessibilityTitle { }
+- (void) setAccessibilityLabel:(NSString *)accessibilityLabel { }
+- (void) setAccessibilityValue:(id)accessibilityValue { }
+@end
+
+FACADE(NSView)
+- (void) setAccessibilityTitleUIElement:(id)accessibilityTitleUIElement { }
+- (void) setAccessibilityChildren:(NSArray *)accessibilityChildren { }
+- (void) setAccessibilityRoleDescription:(NSString *)accessibilityRoleDescription { }
+- (void) setAccessibilityRole:(NSString *)accessibilityRole { }
+- (void) setAccessibilityParent:(id)accessibilityParent { }
+- (void) setAccessibilityIdentifier:(NSString *)accessibilityIdentifier { }
+- (void) setAccessibilityTitle:(NSString *)accessibilityTitle { }
+- (void) setAccessibilityLabel:(NSString *)accessibilityLabel { }
+- (void) setAccessibilityValue:(id)accessibilityValue { }
+- (void) setAllowsVibrancy: (BOOL) v { }
+@end
+
+FACADE(NSViewController)
+// XXX! This needs to actually work
+- (void) removeFromParentViewController {}
+@end
 
 FACADE(NSLayoutConstraint)
 + (void)activateConstraints:(NSArray *)constraints { }
@@ -73,8 +138,11 @@ static int XPF_NSThread_QOS = 0;
 @end
 
 FACADE(NSOperation)
+static int XPF_NSOperation_Name = 0;
 - (NSQualityOfService) qualityOfService {return NSQualityOfServiceDefault; }
 - (void) setQualityOfService:(NSQualityOfService)qualityOfService {}
+- (void) setName: (NSString *) name { objc_setAssociatedObject(self, &XPF_NSOperation_Name, name, OBJC_ASSOCIATION_COPY); }
+- (NSString *) name { return objc_getAssociatedObject(self, &XPF_NSOperation_Name); }
 @end
 
 FACADE(NSToolbarItem)

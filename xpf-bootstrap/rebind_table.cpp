@@ -34,6 +34,7 @@
 #include <dispatch/dispatch.h>
 #include <Block.h>
 #include <CoreFoundation/CoreFoundation.h>
+#include <xpc/xpc.h>
 
 #define XPF_LIBSYSTEM_PATH "/usr/lib/libSystem.B.dylib"
 #define XPF_FOUNDATION_PATH "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
@@ -42,6 +43,17 @@
 
 
 namespace xpf {
+
+// XXX: Work around crashes caused by method replacement requests on unavailable classes
+// XXX: We need to load the real classes here instead
+static void (*orig_IBReplaceMethodPrimitive)(void *cls, void *methodSIG, void *oldSel, void *newSel, void *block);
+static void xpf_IBReplaceMethodPrimitive(void *cls, void *methodSIG, void *oldSel, void *newSel, void *block) {
+    if (cls == NULL)
+        return;
+    return orig_IBReplaceMethodPrimitive(cls, methodSIG, oldSel, newSel, block);
+}
+XPF_REBIND_ENTRY("_IBReplaceMethodPrimitive", "@rpath/IBFoundation.framework/Versions/A/IBFoundation", (void **) &orig_IBReplaceMethodPrimitive, (uintptr_t) &xpf_IBReplaceMethodPrimitive);
+
 
 /*
  * Xcode 6.3 enables/disables broken 10.9 compatibility code based on the current system version; we supply
@@ -53,6 +65,7 @@ namespace xpf {
 static unsigned int Yosemite_DVTCurrentSystemVersionAvailabilityForm () { return 101000; }
 XPF_REBIND_ENTRY("_DVTCurrentSystemVersionAvailabilityForm", "@rpath/DVTFoundation.framework/Versions/A/DVTFoundation", NULL, (uintptr_t) &Yosemite_DVTCurrentSystemVersionAvailabilityForm);
 
+#if 0
 static CFDictionaryRef Yosemite__CFCopySystemVersionDictionary () {
     CFMutableDictionaryRef result = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     
@@ -70,7 +83,8 @@ static CFDictionaryRef Yosemite__CFCopySystemVersionDictionary () {
     return result;
 }
 XPF_REBIND_ENTRY("__CFCopySystemVersionDictionary", XPF_CF_PATH, nullptr, (uintptr_t) &Yosemite__CFCopySystemVersionDictionary);
-
+#endif
+    
 /*
  * NSVisualEffectView is used on Yosemite to produce the ugly blended translucency views. We provide a simple
  * no-op replacement.
@@ -144,6 +158,16 @@ static dispatch_queue_t xpf_dispatch_get_global_queue (long priority, unsigned l
 }
 XPF_REBIND_ENTRY("_dispatch_get_global_queue", XPF_LIBSYSTEM_PATH, (void **) &orig_dispatch_get_global_queue, (uintptr_t) &xpf_dispatch_get_global_queue);
     
+extern "C" void xpc_connection_set_instance(xpc_connection_t, uuid_t);
+static void xpf_xpc_connection_set_instance(xpc_connection_t c, uuid_t uuid){
+    return xpc_connection_set_instance(c, uuid);
+}
+XPF_REBIND_ENTRY("_xpc_connection_set_oneshot_instance", XPF_LIBSYSTEM_PATH, NULL, (uintptr_t) &xpf_xpc_connection_set_instance);
+
+/* This was added in 10.10, and can be used with -[NSURL setResourceValue:forKey:error:]. */
+static CFStringRef xpf_NSURLQuarantinePropertiesKey = CFSTR("xpf_NSURLQuarantinePropertiesKey");
+XPF_REBIND_ENTRY("_NSURLQuarantinePropertiesKey", XPF_CF_PATH, NULL, (uintptr_t) xpf_NSURLQuarantinePropertiesKey);
+
 /*
  * Yosemite's libdispatch provides a set of block utility functions that support creating a custom block type that allows
  * the assignation of operations over GCD-specific block attributes.
@@ -161,6 +185,11 @@ static dispatch_block_t xpf_dispatch_block_create_with_qos_class (dispatch_block
     return Block_copy(block);
 }
 XPF_REBIND_ENTRY("_dispatch_block_create_with_qos_class", XPF_LIBSYSTEM_PATH, NULL, (uintptr_t) &xpf_dispatch_block_create_with_qos_class);
+    
+dispatch_queue_attr_t xpf_dispatch_queue_attr_make_with_qos_class (dispatch_queue_attr_t attr, dispatch_qos_class_t qos_class, int relative_priority) {
+    return attr;
+}
+XPF_REBIND_ENTRY("_dispatch_queue_attr_make_with_qos_class", XPF_LIBSYSTEM_PATH, NULL, (uintptr_t) &xpf_dispatch_queue_attr_make_with_qos_class);
 
 static dispatch_block_t xpf_dispatch_block_create (dispatch_block_flags_t flags, dispatch_block_t block) {
     return xpf_dispatch_block_create_with_qos_class(flags, QOS_CLASS_DEFAULT, 0, block);
