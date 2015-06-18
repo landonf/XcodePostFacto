@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		053B01E71B333EFD0010ACDC /* BOMCopier.mm in Sources */ = {isa = PBXBuildFile; fileRef = 053B01E61B333EFD0010ACDC /* BOMCopier.mm */; };
 		059723191B27812900662B9C /* PackageKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 059723181B27812900662B9C /* PackageKit.framework */; };
 		0597231C1B27815400662B9C /* PKInstallClient+XPF.m in Sources */ = {isa = PBXBuildFile; fileRef = 0597231B1B27815400662B9C /* PKInstallClient+XPF.m */; };
 		05B0264D1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 05B0264C1AB4E17500F6BF2B /* XcodePostFacto.xcplugindata */; };
@@ -75,6 +76,7 @@
 
 /* Begin PBXFileReference section */
 		052BA4481B276C0600058702 /* DVTPlugInScanRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTPlugInScanRecord.h; sourceTree = "<group>"; };
+		053B01E61B333EFD0010ACDC /* BOMCopier.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BOMCopier.mm; sourceTree = "<group>"; };
 		059723181B27812900662B9C /* PackageKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PackageKit.framework; path = /System/Library/PrivateFrameworks/PackageKit.framework; sourceTree = "<absolute>"; };
 		0597231B1B27815400662B9C /* PKInstallClient+XPF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKInstallClient+XPF.m"; sourceTree = "<group>"; };
 		05B026421AB4E14C00F6BF2B /* XcodePostFacto.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XcodePostFacto.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		053B01E51B333EDB0010ACDC /* BomFramework */ = {
+			isa = PBXGroup;
+			children = (
+				053B01E61B333EFD0010ACDC /* BOMCopier.mm */,
+			);
+			name = BomFramework;
+			sourceTree = "<group>";
+		};
 		05B026391AB4E14C00F6BF2B = {
 			isa = PBXGroup;
 			children = (
@@ -220,7 +230,7 @@
 				05C258B21AB8A667007DD20C /* cfbundle_rebind.h */,
 				05C258B11AB8A667007DD20C /* cfbundle_rebind.cpp */,
 				05C258B01AB89EF2007DD20C /* Xcode API */,
-				05EEA0D81AB80CE9000C8B89 /* Yosemite Bootstrap Compat */,
+				05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */,
 				05EEA0C31AB7BFEC000C8B89 /* dyld_priv.h */,
 				05EEA0A51AB7B354000C8B89 /* Supporting Files */,
 			);
@@ -251,14 +261,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		05EEA0D81AB80CE9000C8B89 /* Yosemite Bootstrap Compat */ = {
+		05EEA0D81AB80CE9000C8B89 /* Yosemite Compat */ = {
 			isa = PBXGroup;
 			children = (
+				053B01E51B333EDB0010ACDC /* BomFramework */,
 				05EEA0D51AB7F028000C8B89 /* yosemite_objc_stubs.h */,
 				05EEA0D41AB7F028000C8B89 /* yosemite_objc_stubs.m */,
 				05EEA0D91AB80D1C000C8B89 /* NSVisualEffectView.m */,
 			);
-			name = "Yosemite Bootstrap Compat";
+			name = "Yosemite Compat";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -422,6 +433,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				053B01E71B333EFD0010ACDC /* BOMCopier.mm in Sources */,
 				05EEA0DA1AB80D1C000C8B89 /* NSVisualEffectView.m in Sources */,
 				05EEA0D21AB7EBEB000C8B89 /* rebind_table.cpp in Sources */,
 				05C258B31AB8A667007DD20C /* cfbundle_rebind.cpp in Sources */,

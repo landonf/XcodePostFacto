@@ -32,7 +32,8 @@
 #import "yosemite_objc_stubs.h"
 
 /*
- * This file binds (via ObjC categories) Yosemite-only methods that are required to run Xcode.
+ * This file binds (via ObjC categories) Yosemite-only methods that are required to run Xcode to 
+ * no-op stub methods.
  */
 
 /* We're intentionally implementing methods that *would* be implemented in 10.10 */

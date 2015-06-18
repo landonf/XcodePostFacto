@@ -118,7 +118,7 @@ static void image_rebind_required_symbols (LocalImage &image) {
             if (!sp.name().match(SymbolName(entry.image, entry.symbol)))
                 continue;
     
-            // XPFLog(@"Binding %s:%s in %s:%lx to %lx", sp.name().image().c_str(), sp.name().symbol().c_str(), image.path().c_str(), sp.bind_address(), entry.replacement);
+            // XPFLog(@"Binding %s:%s in %s:%lx to %lx", sp.name().image(), sp.name().symbol(), image.path().c_str(), sp.bind_address(), entry.replacement);
             
             /* On match, save the previous value (if it hasn't already been saved) and insert the new value */
             uintptr_t *target = (uintptr_t * ) sp.bind_address();
