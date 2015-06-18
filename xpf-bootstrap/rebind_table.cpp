@@ -34,6 +34,8 @@
 #include <dispatch/dispatch.h>
 #include <Block.h>
 #include <CoreFoundation/CoreFoundation.h>
+#include <dlfcn.h>
+#include <regex>
 
 #define XPF_LIBSYSTEM_PATH "/usr/lib/libSystem.B.dylib"
 #define XPF_FOUNDATION_PATH "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
@@ -70,6 +72,104 @@ static CFDictionaryRef Yosemite__CFCopySystemVersionDictionary () {
     return result;
 }
 XPF_REBIND_ENTRY("__CFCopySystemVersionDictionary", XPF_CF_PATH, nullptr, (uintptr_t) &Yosemite__CFCopySystemVersionDictionary);
+    
+/*
+ * We have to hook posix_spawn to ensure that our DYLD_* variables are conveyed to child processes.
+ */
+static int (*orig_posix_spawn) (pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]);
+static int (*orig_posix_spawnp) (pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]);
+    
+static int xpf_posix_spawn_common (pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[], bool spawnp) {
+    /* Find the path to our binary */
+    Dl_info di;
+    if (dladdr((const void *) &xpf_posix_spawn_common, &di) == 0) {
+        XPFLog("Could not fetch Dl_info for our own image: %s", dlerror());
+        abort();
+    }
+
+    /* Formulate the expected DYLD_INSERT_LIBRARIES values */
+    auto insert_envp_value = std::string(di.dli_fname);
+    auto insert_envp_set_variable = std::string("DYLD_INSERT_LIBRARIES=");
+    auto insert_envp_full_string = insert_envp_set_variable + insert_envp_value;
+    
+    /* Determine the size of the envp array and allocate our replacement. */
+    size_t envp_count = 0;
+    for (envp_count = 0; envp[envp_count] != NULL; envp_count++);
+    
+    char **new_envp = (char **) malloc(sizeof(char *) * envp_count) + 1 /* in case we need to insert a DYLD_* variable */ + 1 /* trailing NULL */;
+
+    /* Check for our DYLD_INSERT_LIBRARIES value */
+    bool addInsertLibrariesVar = true;
+    for (size_t i = 0; i < envp_count; i++) {
+        std::string value = envp[i];
+        
+        /* If the variable isn't DYLD_INSERT_LIBRARIES -- or the value is already equal to our expected value -- we can just copy it directly. */
+        if (strncmp("DYLD_INSERT_LIBRARIES=", value.c_str(), sizeof("DYLD_INSERT_LIBRARIES=") - 1) != 0 || insert_envp_full_string == value) {
+            new_envp[i] = strdup(value.c_str());
+            continue;
+        } else {
+            /* Otherwise, we know we found an DYLD_INSERT_LIBRARIES value, and we'll update it below. */
+            addInsertLibrariesVar = false;
+        }
+        
+        /* Remove the leading 'DYLD_INSERT_LIBRARIES=' prefix so that we can examine the set of paths */
+        auto path_elems_string = value;
+        path_elems_string.erase(0, insert_envp_set_variable.size());
+        
+        /* Search for our libraries path within the DYLD_INSERT_LIBRARIES path elements. */
+        std::regex path_elem_regex(":?([^:]+):?");
+        bool needs_lib_path_appended = true;
+        for (auto i = std::sregex_iterator(path_elems_string.begin(), path_elems_string.end(), path_elem_regex, std::regex_constants::match_default); i != std::sregex_iterator(); i++) {
+            auto elem = (*i)[1].str();
+            
+            /* If we find our library path, we don't need to append it below. */
+            if (elem == insert_envp_value) {
+                needs_lib_path_appended = false;
+                break;
+            }
+        }
+        
+        /* Append and set the value */
+        if (needs_lib_path_appended) {
+            value += ":" + insert_envp_value;
+        }
+        
+        new_envp[i] = strdup(value.c_str());
+    }
+    
+    /* DYLD_INSERT_LIBRARIES is not set at all; we just need to add it (space for this variable is already allocated in new_envp) */
+    if (addInsertLibrariesVar) {
+        new_envp[envp_count] = strdup(insert_envp_full_string.c_str());
+        envp_count++;
+    }
+    
+    /* Add terminating NULL */
+    new_envp[envp_count] = NULL;
+    
+    int result;
+    if (spawnp) {
+        result = orig_posix_spawnp(pid, path, file_actions, attrp, argv, new_envp);
+    } else {
+        result = orig_posix_spawn(pid, path, file_actions, attrp, argv, new_envp);
+    }
+    
+    for (size_t i = 0; i < envp_count; i++)
+        free(new_envp[i]);
+    
+    free(new_envp);
+    return result;
+}
+
+static int xpf_posix_spawn (pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
+    return xpf_posix_spawn_common(pid, path, file_actions, attrp, argv, envp, true);
+}
+
+static int xpf_posix_spawnp (pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
+    return xpf_posix_spawn_common(pid, path, file_actions, attrp, argv, envp, false);
+}
+
+XPF_REBIND_ENTRY("_posix_spawn", XPF_LIBSYSTEM_PATH, (void **) &orig_posix_spawn, (uintptr_t) &xpf_posix_spawn);
+XPF_REBIND_ENTRY("_posix_spawnp", XPF_LIBSYSTEM_PATH, (void **)  &orig_posix_spawnp, (uintptr_t) &xpf_posix_spawnp);
 
 /*
  * NSVisualEffectView is used on Yosemite to produce the ugly blended translucency views. We provide a simple
