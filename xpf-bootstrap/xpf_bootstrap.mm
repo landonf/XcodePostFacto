@@ -77,6 +77,9 @@ __attribute__((constructor)) static void xpf_prelaunch_initializer (void) {
     
     /* Use the standard dyld callback for all other rebindings */
     _dyld_register_func_for_add_image(xpf_add_image_callback);
+    
+    /* Ditch the inserted lib to prevent breaking pngcrush */
+    unsetenv("DYLD_INSERT_LIBRARIES");
 }
 
 /**
